@@ -16,11 +16,11 @@ class Player < Entity
 
   def move_right
     # todo sprite direction
-    self.x += SPEED
+    self.x += SPEED if self.x + self.w < $WIDTH
   end
 
   def move_left
     # todo sprite direction
-    self.x -= SPEED
+    self.x -= SPEED if self.x > 0
   end
 end

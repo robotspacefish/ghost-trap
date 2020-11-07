@@ -6,7 +6,8 @@ class Player < Entity
   SPEED = 3
 
   def initialize
-    super(50, 100, 100, 80)
+    w = 100
+    super($WIDTH/2-w/2, 150, w, 80)
     @sprite = "sprites/dragon-0.png"
   end
 

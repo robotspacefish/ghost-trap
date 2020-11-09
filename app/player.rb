@@ -29,21 +29,26 @@ class Player < Entity
     self.total_ghosts_held += 1 if self.total_ghosts_held < self.ghost_limit
   end
 
-  def draw
-    [
-      x, y, w, h, sprite_path,
-      0,              # ANGLE
-      255,            # ALPHA
-      255,            # RED SATURATION
-      255,            # GREEN SATURATION
-      255,            # BLUE SATURATION
-      0,              # TILE X
-      0,              # TILE Y
-      self.w,         # TILE W
-      self.h,         # TILE H
-      self.flip,      # FLIP HORIZONTALLY
-      false           # FLIP VERTICALLY
-    ]
+  # def draw
+  #   [
+  #     x, y, w, h, sprite_path,
+  #     0,              # ANGLE
+  #     255,            # ALPHA
+  #     255,            # RED SATURATION
+  #     255,            # GREEN SATURATION
+  #     255,            # BLUE SATURATION
+  #     0,              # TILE X
+  #     0,              # TILE Y
+  #     self.w,         # TILE W
+  #     self.h,         # TILE H
+  #     self.flip,      # FLIP HORIZONTALLY
+  #     false           # FLIP VERTICALLY
+  #   ]
+  # end
+
+
+  def render_ui args
+    args.outputs.labels << [$WIDTH - 200, 40, "Ghosts in Pack: #{self.total_ghosts_held}", 255, 255, 255]
   end
 
 end

@@ -1,28 +1,23 @@
 require 'app/require.rb'
 
-# Game dimensions
+# GLOBALS
+# game dimensions
 $WIDTH = 1280
 $HEIGHT = 720
 
 def defaults args
   # set initial variables
   args.state.player ||= Player.new
-  args.state.ghosts ||= initGhosts
+  args.state.ghosts ||= [
+    Ghost.new(300,450),
+    Ghost.new(700,600),
+    Ghost.new(1100,600)
+  ]
   args.state.mode ||= :play
 end
 
-def initGhosts
-  [
-    Ghost.new(300,450),
-    Ghost.new(1100,600),
-    Ghost.new(700,600)
-  ]
-end
-
 def render args
-  mode = args.state.mode
-
-  render_play(args) if mode == :play
+  render_play(args) if args.state.mode == :play
 end
 
 def render_play(args)

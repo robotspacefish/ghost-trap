@@ -1,12 +1,14 @@
 class Entity
-  attr_accessor :x, :y, :w, :h
+  attr_accessor :x, :y, :w, :h, :sprite_path, :flip
   @@all = []
 
-  def initialize(x, y, w, h)
+  def initialize(x, y, w, h, sprite_path, flip)
     @w = w
     @h = h
     @x = x
     @y = y
+    @sprite_path = sprite_path
+    @flip = flip
     self.class.all << self
   end
 

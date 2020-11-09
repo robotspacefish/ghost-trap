@@ -1,17 +1,15 @@
 require 'app/entity.rb'
 
 class Player < Entity
-  attr_accessor :sprite
-
-  SPEED = 3
+  SPEED = 4
 
   def initialize
     w = 100
-    super($WIDTH/2-w/2, 150, w, 80)
-    @sprite = "sprites/dragon-0.png"
+    super($WIDTH/2-w/2, 150, w, 80, "sprites/dragon-0.png", false)
   end
 
   def calc
+
   end
 
   def move_right

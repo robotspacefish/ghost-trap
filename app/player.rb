@@ -1,11 +1,14 @@
 require 'app/entity.rb'
 
 class Player < Entity
+  attr_accessor :total_ghosts_held, :ghost_limit
   SPEED = 4
 
   def initialize
     w = 100
     super($WIDTH/2-w/2, 150, w, 80, "sprites/dragon-0.png", false)
+    @total_ghosts_held = 0
+    @ghost_limit = 10 # max amount of ghosts that can be stored in the backpack
   end
 
   # def calc
@@ -20,6 +23,10 @@ class Player < Entity
   def move_left
     self.flip = true
     self.x -= SPEED if self.x > 0
+  end
+
+  def store_ghost_in_pack
+    self.total_ghosts_held += 1 if self.total_ghosts_held < self.ghost_limit
   end
 
   def draw

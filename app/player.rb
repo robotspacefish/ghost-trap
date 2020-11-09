@@ -1,7 +1,7 @@
 require 'app/entity.rb'
 
 class Player < Entity
-  attr_accessor :total_ghosts_held, :ghost_limit, :beam, :is_shooting
+  attr_accessor :total_ghosts_held, :ghost_limit, :beam
   SPEED = 4
 
   def initialize
@@ -10,7 +10,6 @@ class Player < Entity
     @total_ghosts_held = 0
     @ghost_limit = 10 # max amount of ghosts that can be stored in the backpack
     @beam = {x: (self.x + self.w/2).to_i, y: self.y+60, h: 300, w: 10}
-    @is_shooting = false
   end
 
   # def calc
@@ -44,26 +43,6 @@ class Player < Entity
     # debug
     args.outputs.labels << [10, $HEIGHT - 20, "#{self.beam.x}, #{self.beam.y}", 255, 255, 255]
   end
-
-  def render(args)
-    self.shoot(args)
-
-    [
-      x, y, w, h, sprite_path,
-      0,              # ANGLE
-      self.alpha,            # ALPHA
-      255,            # RED SATURATION
-      255,            # GREEN SATURATION
-      255,            # BLUE SATURATION
-      0,              # TILE X
-      0,              # TILE Y
-      self.w,         # TILE W
-      self.h,         # TILE H
-      self.flip,      # FLIP HORIZONTALLY
-      false           # FLIP VERTICALLY
-    ]
-  end
-
 
   def render_ui args
     args.outputs.labels << [$WIDTH - 200, 40, "Ghosts in Pack: #{self.total_ghosts_held}", 255, 255, 255]

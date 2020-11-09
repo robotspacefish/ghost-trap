@@ -34,11 +34,15 @@ end
 # update
 def calc args
   handle_input(args)
+  args.state.ghosts.each { |g| g.calc(args) }
 end
 
 def handle_input(args)
   args.state.player.move_right if args.inputs.keyboard.d || args.inputs.keyboard.right
   args.state.player.move_left if args.inputs.keyboard.a || args.inputs.keyboard.left
+  args.state.player.shoot(args) if args.inputs.keyboard.space
+
+  # TODO keydown/keyup
 end
 
 def tick args

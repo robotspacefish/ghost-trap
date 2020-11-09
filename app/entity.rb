@@ -17,8 +17,7 @@ class Entity
     @@all
   end
 
-  def draw
-    # [x, y, w, h, sprite_path]
+  def render
      [
       x, y, w, h, sprite_path,
       0,              # ANGLE

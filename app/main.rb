@@ -25,10 +25,10 @@ def render_play(args)
   args.outputs.sprites << [0, 0, $WIDTH, $HEIGHT, 'sprites/wp4470740-1280x720.jpg']
 
   # player
-  args.outputs.sprites << args.state.player.draw
+  args.outputs.sprites << args.state.player.render(args)
+  # args.outputs.solids << [args.state.player.beam.x, args.state.player.beam.y, 8, 300, 0, 0, 255]
 
-  # ghosts
-  args.outputs.sprites <<  args.state.ghosts.map { |g| g.draw }
+  args.state.player.render_ui(args)
 end
 
 # update

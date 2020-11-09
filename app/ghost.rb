@@ -15,7 +15,7 @@ class Ghost < Entity
   end
 
   def calc(args)
-    self.y -= 1 if args.state.tick_count % 10 == 0
+    self.y -= 0.5
 
     self.y = $HEIGHT if self.y < 0
 

@@ -39,9 +39,9 @@ class Entity
   end
 
   # override :serialize and return hash to Class can be persisted to disk in the event of an exception
-  def serialize
-    { sprite_path: sprite_path, flip: flip }
-  end
+  # def serialize
+  #   { sprite_path: sprite_path, flip: flip }
+  # end
 
   def inspect
     serialize.to_s

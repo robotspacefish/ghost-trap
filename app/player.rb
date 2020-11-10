@@ -52,6 +52,8 @@ class Player < Entity
 
   def render_ui args
     args.outputs.labels << [$WIDTH - 200, 40, "Ghosts in Pack: #{self.total_ghosts_held}", 255, 255, 255]
+  def serialize
+    { x: x, y: y, w: w, h: h, total_ghosts_held: total_ghosts_held, ghost_limit: ghost_limit, beam: beam, is_shooting: is_shooting, ghosts_on_beam: ghosts_on_beam }
   end
 
 end

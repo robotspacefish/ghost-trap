@@ -30,11 +30,15 @@ class Ghost < Entity
       self.x = beam.x - diff/2
     else
       self.has_free_will = true
-      self.is_in_beam = false
+      # self.is_in_beam = false
       self.y -= 0.5
 
       self.wobble if args.state.tick_count % 10 == 0
 
+    end
+
+    def serialize
+      { x: x, y: y, w: w, h: h, is_flickering: is_flickering,  has_free_will: has_free_will, is_in_beam: is_in_beam, id: id }
     end
 
 
@@ -87,9 +91,5 @@ class Ghost < Entity
 
     self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
   end
-
-  # def follow_beam(beam)
-
-  # end
 
 end

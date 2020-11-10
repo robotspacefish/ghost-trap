@@ -1,7 +1,7 @@
 require 'app/entity.rb'
 
 class Player < Entity
-  attr_accessor :total_ghosts_held, :ghost_limit, :beam
+  attr_accessor :total_ghosts_held, :ghost_limit, :beam, :is_shooting
   SPEED = 4
 
   def initialize
@@ -10,11 +10,17 @@ class Player < Entity
     @total_ghosts_held = 0
     @ghost_limit = 10 # max amount of ghosts that can be stored in the backpack
     @beam = {x: (self.x + self.w/2).to_i, y: self.y+60, h: 300, w: 10}
+    @is_shooting = false
   end
 
-  # def calc
-
-  # end
+  def calc(args)
+    if self.is_shooting
+      # self.beam.is_visible = true
+      self.shoot(args)
+    else
+      # self.beam.is_visible = false
+    end
+  end
 
   def move_right
     self.flip = false
@@ -33,7 +39,7 @@ class Player < Entity
   def shoot(args)
     # self.beam.y += 3
 
-    # center beam
+    # center beam on player
     self.beam.x = self.x + self.w/2
 
     # placeholder beam

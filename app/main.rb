@@ -43,7 +43,7 @@ def render_play(args)
   # debug
   y = $HEIGHT
   args.state.ghosts.each.with_index(1) do |g, i|
-    args.outputs.labels << [10, y, "#{i} has free will: #{g.has_free_will}", 0, 0, 0]
+    args.outputs.labels << [10, y, "#{i} has free will: #{g.has_free_will}, on beam: #{g.is_in_beam}", 0, 0, 0]
     y -= 30
   end
 
@@ -59,10 +59,10 @@ def calc args
 
     if !g.has_free_will && !g.is_in_beam
       g.is_in_beam = true
-      # add to beam count
-      # TODO fix adding ghost repeatedly
       args.state.player.add_ghost_to_beam(g)
-
+    elsif g.has_free_will && g.is_in_beam
+      g.is_in_beam = false
+      args.state.player.remove_ghost_from_beam(g)
     end
   end
 end

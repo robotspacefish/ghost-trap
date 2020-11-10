@@ -50,9 +50,11 @@ end
 def handle_input(args)
   args.state.player.move_right if args.inputs.keyboard.d || args.inputs.keyboard.right
   args.state.player.move_left if args.inputs.keyboard.a || args.inputs.keyboard.left
-  args.state.player.shoot(args) if args.inputs.keyboard.space
+
 
   # TODO keydown/keyup
+  args.state.player.is_shooting = args.inputs.keyboard.space  ? true : false
+
 end
 
 def tick args

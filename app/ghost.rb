@@ -1,9 +1,10 @@
 require 'app/entity.rb'
 
 class Ghost < Entity
-  attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam
+  attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam, :id
 
   @@FLICKER_THRESHOLD = 255/2
+  @@ID = 1
 
   def initialize(x, y)
     super(x, y, 80, 80, "sprites/circle-white.png", false)
@@ -12,6 +13,10 @@ class Ghost < Entity
     @is_invulnerable = false
     @has_free_will = true
     @is_in_beam = false
+    @id = @@ID
+
+    @@ID += 1
+    puts self
   end
 
   def calc(args, beam)

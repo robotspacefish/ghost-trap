@@ -39,6 +39,13 @@ def render_play(args)
   # args.outputs.solids << [args.state.player.beam.x, args.state.player.beam.y, 8, 300, 0, 0, 255]
 
   args.state.player.render_ui(args)
+
+  # debug
+  y = $HEIGHT
+  args.state.ghosts.each.with_index(1) do |g, i|
+    args.outputs.labels << [10, y, "#{i} has free will: #{g.has_free_will}", 0, 0, 0]
+    y -= 30
+  end
 end
 
 # update
@@ -61,5 +68,9 @@ def tick args
   defaults args
   render args
   calc args
+end
+
+def render_debug args
+  args.outputs.labels << [10, $HEIGHT, "Tick Count: #{args.state.tick_count}", 255, 255, 255]
 end
 

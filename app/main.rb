@@ -8,6 +8,7 @@ $HEIGHT = 720
 def defaults args
   # set initial variables
   args.state.player ||= Player.new
+  args.state.disposal ||= Disposal.new(args.state.player.y - 30)
   args.state.ghosts ||= [
     Ghost.new(300,450),
     Ghost.new(700,600),
@@ -23,6 +24,12 @@ end
 def render_play(args)
   # background
   args.outputs.sprites << [0, 0, $WIDTH, $HEIGHT, 'sprites/wp4470740-1280x720.jpg']
+
+  # ghost disposal
+  args.outputs.sprites << args.state.disposal.render
+
+  # ghosts
+  args.outputs.sprites <<  args.state.ghosts.map { |g| g.render }
 
   # player
   args.outputs.sprites << args.state.player.render

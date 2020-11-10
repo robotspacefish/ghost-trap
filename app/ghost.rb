@@ -25,6 +25,9 @@ class Ghost < Entity
     else
       self.has_free_will = true
       self.y -= 0.5
+
+      self.wobble if args.state.tick_count % 10 == 0
+
     end
 
 
@@ -32,6 +35,10 @@ class Ghost < Entity
 
     # debug
     # args.outputs.labels << [$WIDTH - 200, 100, self.alpha, 255, 255, 255]
+  end
+
+  def wobble
+    self.x += rand <= 0.5 ? -10 : 10
   end
 
   def flicker(args)

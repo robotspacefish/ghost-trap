@@ -11,17 +11,23 @@ class Ghost < Entity
     @is_flickering = false
     @is_invulnerable = false
     @has_free_will = true
-
   end
 
   def calc(args, beam)
-    self.y = $HEIGHT if self.y < 0
+    # TODO need a way to see if the beam is visible/ currently exists
 
-    if self.is_caught_in_beam(beam)
-      self.x = beam.x
+    self.y = $HEIGHT if self.y < 0
+    if beam && self.is_caught_in_beam(beam)
+      # center ghost over beam
+      self.has_free_will = false
+      diff = self.w - beam.w
+      self.x = beam.x - diff/2
     else
+      self.has_free_will = true
       self.y -= 0.5
     end
+
+
     # self.flicker(args) if self.is_flickering
 
     # debug
@@ -59,14 +65,17 @@ class Ghost < Entity
 
   def is_caught_in_beam(b)
     # TODO fix y collision - ghosts keep moving if player stops
-    (
-      (x + w > b.x && x + w < b.x + b.w) ||
-      (x > b.x && x < b.x + b.w) ||
-      (x < b.x && x + w > b.x + b.w)
-    ) && y < b.y + b.h && y > b.y
+    # (
+    #   (x + w > b.x && x + w < b.x + b.w) ||
+    #   (x > b.x && x < b.x + b.w) ||
+    #   (x < b.x && x + w > b.x + b.w)
+    # ) && y < b.y + b.h && y > b.y
+
+    self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
   end
 
   # def follow_beam(beam)
 
   # end
+
 end

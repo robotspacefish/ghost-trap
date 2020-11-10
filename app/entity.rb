@@ -17,6 +17,10 @@ class Entity
     @@all
   end
 
+  def rect
+    [x, y, w, h]
+  end
+
   def render
      [
       x, y, w, h, sprite_path,

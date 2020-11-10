@@ -1,7 +1,7 @@
 require 'app/entity.rb'
 
 class Ghost < Entity
-  attr_accessor :is_flickering, :is_invulnerable, :has_free_will
+  attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam
 
   @@FLICKER_THRESHOLD = 255/2
 
@@ -11,6 +11,7 @@ class Ghost < Entity
     @is_flickering = false
     @is_invulnerable = false
     @has_free_will = true
+    @is_in_beam = false
   end
 
   def calc(args, beam)
@@ -24,6 +25,7 @@ class Ghost < Entity
       self.x = beam.x - diff/2
     else
       self.has_free_will = true
+      self.is_in_beam = false
       self.y -= 0.5
 
       self.wobble if args.state.tick_count % 10 == 0

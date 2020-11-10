@@ -46,6 +46,7 @@ def render_play(args)
     args.outputs.labels << [10, y, "#{i} has free will: #{g.has_free_will}", 0, 0, 0]
     y -= 30
   end
+
 end
 
 # update
@@ -55,6 +56,14 @@ def calc args
   args.state.ghosts.each do |g|
     beam = args.state.player.is_shooting ? args.state.player.beam : nil
     g.calc(args, beam)
+
+    if !g.has_free_will && !g.is_in_beam
+      g.is_in_beam = true
+      # add to beam count
+      # TODO fix adding ghost repeatedly
+      args.state.player.add_ghost_to_beam(g)
+
+    end
   end
 end
 
@@ -76,5 +85,6 @@ end
 
 def render_debug args
   args.outputs.labels << [10, $HEIGHT, "Tick Count: #{args.state.tick_count}", 255, 255, 255]
+
 end
 

@@ -51,7 +51,11 @@ end
 # update
 def calc args
   handle_input(args)
-  args.state.ghosts.each { |g| g.calc(args, args.state.player.beam) }
+  args.state.player.calc(args)
+  args.state.ghosts.each do |g|
+    beam = args.state.player.is_shooting ? args.state.player.beam : nil
+    g.calc(args, beam)
+  end
 end
 
 def handle_input(args)

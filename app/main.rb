@@ -12,7 +12,10 @@ def defaults args
   args.state.ghosts ||= [
     Ghost.new(300,450),
     Ghost.new(700,600),
-    Ghost.new(1100,600)
+    Ghost.new(1100,600),
+    Ghost.new(200,600),
+    Ghost.new(500,600),
+    Ghost.new(440,600),
   ]
   args.state.mode ||= :play
 end

@@ -14,11 +14,14 @@ class Ghost < Entity
 
   end
 
-  def calc(args)
-    self.y -= 0.5
-
+  def calc(args, beam)
     self.y = $HEIGHT if self.y < 0
 
+    if self.is_caught_in_beam(beam)
+      self.x = beam.x
+    else
+      self.y -= 0.5
+    end
     # self.flicker(args) if self.is_flickering
 
     # debug
@@ -49,4 +52,21 @@ class Ghost < Entity
     @@FLICKER_THRESHOLD
   end
 
+  def self.spawn
+    # TODO
+    # spawn randomly and flicker in
+  end
+
+  def is_caught_in_beam(b)
+    # TODO fix y collision - ghosts keep moving if player stops
+    (
+      (x + w > b.x && x + w < b.x + b.w) ||
+      (x > b.x && x < b.x + b.w) ||
+      (x < b.x && x + w > b.x + b.w)
+    ) && y < b.y + b.h && y > b.y
+  end
+
+  # def follow_beam(beam)
+
+  # end
 end

@@ -41,7 +41,7 @@ end
 # update
 def calc args
   handle_input(args)
-  args.state.ghosts.each { |g| g.calc(args) }
+  args.state.ghosts.each { |g| g.calc(args, args.state.player.beam) }
 end
 
 def handle_input(args)

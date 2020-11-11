@@ -34,29 +34,27 @@ class Ghost < Entity
       self.wobble if args.state.tick_count % 10 == 0
     end
 
+    self.toggle_flickering if args.state.tick_count % 60 == 0 && rand < 0.5
 
-
-
-    # self.flicker(args) if self.is_flickering
+    self.flicker(args) if self.is_flickering
 
     # debug
     # args.outputs.labels << [$WIDTH - 200, 100, self.alpha, 255, 255, 255]
   end
-
-
 
   def wobble
     self.x += rand <= 0.5 ? -10 : 10
   end
 
   def flicker(args)
-    # TODO stop at max 255, min 0
-    self.alpha = (255 * Math.sin(args.state.tick_count/60 * 0.5 * Math::PI/5))
+    # TODO FIX stop at max 255, min 0
+    self.alpha = (255 * Math.sin(args.state.tick_count/60 * 0.5 * Math::PI/10)) + 50
   end
 
   def stop_flickering
     puts "stop flickering"
     self.is_flickering = false
+    self.is_invulnerable = false
     self.alpha = 255
   end
 
@@ -65,8 +63,11 @@ class Ghost < Entity
   end
 
   def start_flickering
-    puts "start flickering"
-    self.is_flickering = true
+    if self.has_free_will
+      puts "start flickering"
+      self.is_flickering = true
+      self.is_invulnerable = true
+    end
   end
 
   def self.flicker_threshold
@@ -79,7 +80,7 @@ class Ghost < Entity
   end
 
   def is_caught_in_beam(b)
-    self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
+    !self.is_invulnerable && self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
   end
 
   def serialize

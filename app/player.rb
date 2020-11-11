@@ -60,7 +60,6 @@ class Player < Entity
   end
 
   def add_ghost_to_beam(ghost)
-    puts "ghost added: #{ghost}"
     self.ghosts_on_beam << ghost
   end
 
@@ -81,8 +80,8 @@ class Player < Entity
     args.outputs.sprites << [self.beam.x, self.beam.y, self.beam.w, self.beam.h, 'sprites/beam.png']
 
 
-    # debug
-    args.outputs.labels << [10, $HEIGHT - 20, "#{self.beam.x}, #{self.beam.y}", 255, 255, 255]
+    # # debug
+    # args.outputs.labels << [10, $HEIGHT - 20, "#{self.beam.x}, #{self.beam.y}", 255, 255, 255]
   end
 
   def render_ui args

@@ -43,16 +43,26 @@ def render_play(args)
   # debug
   y = $HEIGHT
   args.state.ghosts.each.with_index(1) do |g, i|
-    args.outputs.labels << [10, y, "#{i} has free will: #{g.has_free_will}, on beam: #{g.is_in_beam}", 0, 0, 0]
+    r = g.is_in_beam ? 255 : 0
+    if g.is_in_beam
+      args.outputs.borders << [g.x,g.y,g.w,g.h, 255, 0, 0]
+    end
+    args.outputs.labels << [10, y, "#{g.id} has free will: #{g.has_free_will}, on beam: ", 0, 0, 0]
+    args.outputs.labels << [330, y, "#{g.is_in_beam}", r, 0, 0]
     y -= 30
   end
+
+  args.outputs.labels << [$WIDTH - 200, 80, "Disposal: #{args.state.disposal.total_ghosts}", 255, 255, 255]
+
 
 end
 
 # update
 def calc args
   handle_input(args)
+
   args.state.player.calc(args)
+
   args.state.ghosts.each do |g|
     beam = args.state.player.is_shooting ? args.state.player.beam : nil
     g.calc(args, beam)
@@ -76,6 +86,7 @@ def handle_input(args)
   args.state.player.is_shooting = args.inputs.keyboard.space  ? true : false
 
   args.state.player.dispose_of_ghosts(args.state.disposal) if args.inputs.keyboard.key_down.e
+
 end
 
 def tick args

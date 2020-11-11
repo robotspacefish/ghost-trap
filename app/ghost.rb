@@ -20,8 +20,6 @@ class Ghost < Entity
   end
 
   def calc(args, beam)
-    # TODO need a way to see if the beam is visible/ currently exists
-
     self.y = $HEIGHT if self.y < 0
     if beam && self.is_caught_in_beam(beam)
       # center ghost over beam
@@ -30,7 +28,6 @@ class Ghost < Entity
       self.x = beam.x - diff/2
     else
       self.has_free_will = true
-      # self.is_in_beam = false
       self.y -= 0.5
 
       self.wobble if args.state.tick_count % 10 == 0
@@ -82,13 +79,6 @@ class Ghost < Entity
   end
 
   def is_caught_in_beam(b)
-    # TODO fix y collision - ghosts keep moving if player stops
-    # (
-    #   (x + w > b.x && x + w < b.x + b.w) ||
-    #   (x > b.x && x < b.x + b.w) ||
-    #   (x < b.x && x + w > b.x + b.w)
-    # ) && y < b.y + b.h && y > b.y
-
     self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
   end
 

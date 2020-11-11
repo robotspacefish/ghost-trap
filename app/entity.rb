@@ -42,6 +42,9 @@ class Entity
   # def serialize
   #   { sprite_path: sprite_path, flip: flip }
   # end
+  def serialize
+    {x: x, y: y, w: w, h: h}
+  end
 
   def inspect
     serialize.to_s

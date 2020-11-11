@@ -51,7 +51,10 @@ class Ghost < Entity
 
   def flicker(args)
     # TODO FIX stop at max 255, min 0
-    self.alpha = (255 * Math.sin(args.state.tick_count/60 * 0.5 * Math::PI/10)) + 50
+    self.alpha = (255 * Math.sin(args.state.tick_count/60 * 0.5 * Math::PI/10))
+
+    # hacky but keeps alpha from going negative
+    self.alpha = 20 if self.alpha < 20
   end
 
   def stop_flickering

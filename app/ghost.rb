@@ -19,6 +19,7 @@ class Ghost < Entity
   end
 
   def calc(args, beam)
+    # keep in bounds
     self.y = $HEIGHT if self.y < 0 || self.y > $HEIGHT
 
     if beam && self.is_caught_in_beam(beam)
@@ -28,7 +29,9 @@ class Ghost < Entity
       self.x = beam.x - diff/2
     else
       self.has_free_will = true
-      self.y -= 0.5
+
+      # keep above y=300
+      self.y += self.y >= 300 ? -0.5 : 0.5
 
       self.wobble if args.state.tick_count % 10 == 0
     end

@@ -1,7 +1,7 @@
 require 'app/entity.rb'
 
 class Player < Entity
-  attr_accessor :total_ghosts_held, :ghost_limit, :beam, :is_shooting, :ghosts_on_beam
+  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam
   SPEED = 4
   MAX_BEAM_POWER = 2
 
@@ -9,7 +9,7 @@ class Player < Entity
     w = 100
     super($WIDTH/2-w/2, 150, w, 80, "sprites/dragon-0.png", false)
     @total_ghosts_held = 0
-    @ghost_limit = 10 # max amount of ghosts that can be stored in the backpack
+    @backpack_limit = 10
     @beam = {x: (self.x + self.w/2).to_i, y: self.y+60, h: 300, w: 10}
     @is_shooting = false
 
@@ -21,11 +21,26 @@ class Player < Entity
     if  self.is_shooting
       self.shoot(args)
     else
-      if ghosts_on_beam.size > 0
-        # store ghosts in pack up to limit
-        # free any ghosts that don't fit
+      # store whatever ghosts can fit into the backpack and remove them from the beam
+      self.ghosts_on_beam.each do |g|
+        self.store_ghost_in_pack(g, args)
       end
     end
+  end
+
+  def store_ghost_in_pack(g, args)
+    if self.total_ghosts_held < self.backpack_limit
+      # increase total of ghosts in pack
+      self.total_ghosts_held += 1
+
+      self.remove_ghost_from_beam(g)
+      # destroy from state TODO move this somewhere else (Ghost.all?)
+      index = args.state.ghosts.find_index do |gh|
+        gh.id == g.id
+      end
+      args.state.ghosts.slice!(index)
+    end
+
   end
 
   def remove_ghost_from_beam(g)
@@ -48,9 +63,6 @@ class Player < Entity
     self.ghosts_on_beam << ghost
   end
 
-  def store_ghost_in_pack
-    self.total_ghosts_held += 1 if self.total_ghosts_held < self.ghost_limit
-  end
 
   def shoot(args)
     # self.beam.y += 3
@@ -67,7 +79,7 @@ class Player < Entity
   end
 
   def render_ui args
-    # args.outputs.labels << [$WIDTH - 200, 40, "Ghosts in Pack: #{self.total_ghosts_held}", 255, 255, 255]
+    args.outputs.labels << [$WIDTH - 200, 40, "Ghosts in Pack: #{self.total_ghosts_held}", 255, 255, 255]
     args.outputs.labels << [$WIDTH - 200, 60, "Ghosts on Beam: #{self.ghosts_on_beam.size}", 255, 255, 255]
   end
 
@@ -77,7 +89,7 @@ class Player < Entity
   end
 
   def serialize
-    { x: x, y: y, w: w, h: h, total_ghosts_held: total_ghosts_held, ghost_limit: ghost_limit, beam: beam, is_shooting: is_shooting, ghosts_on_beam: ghosts_on_beam }
+    { x: x, y: y, w: w, h: h, total_ghosts_held: total_ghosts_held, backpack_limit: backpack_limit, beam: beam, is_shooting: is_shooting, ghosts_on_beam: ghosts_on_beam }
   end
 
 end

@@ -21,6 +21,7 @@ class Player < Entity
     if  self.is_shooting
       self.shoot(args)
     else
+      # TODO FIX: not storing all ghosts from beam even if they fit
       # store whatever ghosts can fit into the backpack and remove them from the beam
       self.ghosts_on_beam.each do |g|
         self.store_ghost_in_pack(g, args)
@@ -63,6 +64,12 @@ class Player < Entity
     self.ghosts_on_beam << ghost
   end
 
+  def dispose_of_ghosts(disposal)
+    if self.rect.intersect_rect?(disposal.rect)
+      disposal.total_ghosts += self.total_ghosts_held
+      self.total_ghosts_held = 0
+    end
+  end
 
   def shoot(args)
     # self.beam.y += 3

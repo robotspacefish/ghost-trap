@@ -75,6 +75,7 @@ def handle_input(args)
   # TODO keydown/keyup
   args.state.player.is_shooting = args.inputs.keyboard.space  ? true : false
 
+  args.state.player.dispose_of_ghosts(args.state.disposal) if args.inputs.keyboard.key_down.e
 end
 
 def tick args

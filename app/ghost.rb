@@ -16,11 +16,10 @@ class Ghost < Entity
     @id = @@ID
 
     @@ID += 1
-    puts self
   end
 
   def calc(args, beam)
-    self.y = $HEIGHT if self.y < 0
+    self.y = $HEIGHT if self.y < 0 || self.y > $HEIGHT
 
     if beam && self.is_caught_in_beam(beam)
       # center ghost over beam
@@ -44,6 +43,7 @@ class Ghost < Entity
 
   def wobble
     self.x += rand <= 0.5 ? -10 : 10
+    self.y += rand >= 0.5 ? -10 : 10
   end
 
   def flicker(args)

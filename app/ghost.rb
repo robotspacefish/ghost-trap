@@ -21,6 +21,7 @@ class Ghost < Entity
 
   def calc(args, beam)
     self.y = $HEIGHT if self.y < 0
+
     if beam && self.is_caught_in_beam(beam)
       # center ghost over beam
       self.has_free_will = false
@@ -31,12 +32,9 @@ class Ghost < Entity
       self.y -= 0.5
 
       self.wobble if args.state.tick_count % 10 == 0
-
     end
 
-    def serialize
-      { x: x, y: y, w: w, h: h, is_flickering: is_flickering,  has_free_will: has_free_will, is_in_beam: is_in_beam, id: id }
-    end
+
 
 
     # self.flicker(args) if self.is_flickering
@@ -44,6 +42,8 @@ class Ghost < Entity
     # debug
     # args.outputs.labels << [$WIDTH - 200, 100, self.alpha, 255, 255, 255]
   end
+
+
 
   def wobble
     self.x += rand <= 0.5 ? -10 : 10
@@ -82,4 +82,7 @@ class Ghost < Entity
     self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
   end
 
+  def serialize
+    { x: x, y: y, w: w, h: h, is_flickering: is_flickering,  has_free_will: has_free_will, is_in_beam: is_in_beam, id: id }
+  end
 end

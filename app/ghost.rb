@@ -81,8 +81,10 @@ class Ghost < Entity
   end
 
   def self.spawn
-    # TODO
-    # spawn randomly and flicker in
+    # TODO randomly and flicker in
+    x = random_int(20, $WIDTH - 100) # TODO subtract ghost width
+    y = random_int(400, $HEIGHT - 100)
+    Ghost.new(x, y)
   end
 
   def is_caught_in_beam(b)
@@ -92,4 +94,8 @@ class Ghost < Entity
   def serialize
     { x: x, y: y, w: w, h: h, is_flickering: is_flickering,  has_free_will: has_free_will, is_in_beam: is_in_beam, id: id }
   end
+end
+
+def random_int(min, max)
+    rand(max - min) + min
 end

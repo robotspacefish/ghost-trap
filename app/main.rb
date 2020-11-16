@@ -10,12 +10,18 @@ def defaults args
   args.state.player ||= Player.new
   args.state.disposal ||= Disposal.new(args.state.player.y - 30)
   args.state.ghosts ||= [
-    Ghost.new(300,450),
-    Ghost.new(700,600),
-    Ghost.new(1100,600),
-    Ghost.new(200,600),
-    Ghost.new(500,600),
-    Ghost.new(440,600),
+   Ghost.spawn,
+   Ghost.spawn,
+   Ghost.spawn,
+   Ghost.spawn,
+   Ghost.spawn,
+   Ghost.spawn,
+   Ghost.spawn,
+   Ghost.spawn,
+   Ghost.spawn,
+   Ghost.spawn,
+   Ghost.spawn,
+   Ghost.spawn
   ]
   args.state.mode ||= :play
 end

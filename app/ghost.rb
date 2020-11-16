@@ -1,7 +1,7 @@
 require 'app/entity.rb'
 
 class Ghost < Entity
-  attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam, :id
+  attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam, :id, :has_been_in_beam # <- debug
 
   @@FLICKER_THRESHOLD = 255/2
   @@ID = 1
@@ -16,15 +16,24 @@ class Ghost < Entity
     @id = @@ID
 
     @@ID += 1
+
+    @has_been_in_beam = false # for debug
   end
 
   def calc(args, beam)
-    self.sprite_path = self.has_free_will ? "sprites/circle-white.png" : "sprites/circle-gray.png"
+    # use different sprite if ghost is on beam
+    self.sprite_path = !self.is_in_beam ? "sprites/circle-white.png" : "sprites/circle-gray.png"
+
+    # debug
+    self.sprite_path = "sprites/circle-red.png" if !self.is_in_beam && self.has_been_in_beam
+
 
     # keep in bounds
     self.y = $HEIGHT if self.y < 0 || self.y > $HEIGHT
 
     if beam && self.is_caught_in_beam(beam)
+      self.has_been_in_beam = true if !self.has_been_in_beam # debug
+
       # center ghost over beam
       self.has_free_will = false
       diff = self.w - beam.w
@@ -94,7 +103,7 @@ class Ghost < Entity
   end
 
   def serialize
-    { x: x, y: y, w: w, h: h, is_flickering: is_flickering,  has_free_will: has_free_will, is_in_beam: is_in_beam, id: id }
+    { x: x, y: y, w: w, h: h, is_flickering: is_flickering,  has_free_will: has_free_will, is_in_beam: is_in_beam, id: id, has_been_in_beam: has_been_in_beam }
   end
 end
 

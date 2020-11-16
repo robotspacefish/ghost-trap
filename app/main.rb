@@ -9,20 +9,7 @@ def defaults args
   # set initial variables
   args.state.player ||= Player.new
   args.state.disposal ||= Disposal.new(args.state.player.y - 30)
-  args.state.ghosts ||= [
-   Ghost.spawn,
-   Ghost.spawn,
-   Ghost.spawn,
-   Ghost.spawn,
-   Ghost.spawn,
-   Ghost.spawn,
-   Ghost.spawn,
-   Ghost.spawn,
-   Ghost.spawn,
-   Ghost.spawn,
-   Ghost.spawn,
-   Ghost.spawn
-  ]
+  args.state.ghosts ||= []
   args.state.mode ||= :play
 end
 
@@ -63,9 +50,16 @@ def render_play(args)
 
 end
 
+def can_spawn_ghost? args
+  rand >= 0.8 && args.state.tick_count & 60 == 0 && args.state.ghosts.size < 10
+end
+
 # update
 def calc args
   handle_input(args)
+
+  # spawn ghost
+  args.state.ghosts << Ghost.spawn if can_spawn_ghost?(args)
 
   args.state.player.calc(args)
 

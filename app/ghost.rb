@@ -19,6 +19,8 @@ class Ghost < Entity
   end
 
   def calc(args, beam)
+    self.sprite_path = self.has_free_will ? "sprites/circle-white.png" : "sprites/circle-gray.png"
+
     # keep in bounds
     self.y = $HEIGHT if self.y < 0 || self.y > $HEIGHT
 
@@ -58,7 +60,7 @@ class Ghost < Entity
   end
 
   def stop_flickering
-    puts "stop flickering"
+    # puts "stop flickering"
     self.is_flickering = false
     self.is_invulnerable = false
     self.alpha = 255
@@ -70,7 +72,7 @@ class Ghost < Entity
 
   def start_flickering
     if self.has_free_will
-      puts "start flickering"
+      # puts "start flickering"
       self.is_flickering = true
       self.is_invulnerable = true
     end

@@ -25,6 +25,7 @@ def render_play(args)
   args.outputs.sprites << args.state.disposal.render
 
   # ghosts
+  # args.outputs.sprites <<  args.state.ghosts.map { |g| g.render }
   args.outputs.sprites <<  args.state.ghosts.map { |g| g.render }
 
   # player
@@ -33,19 +34,8 @@ def render_play(args)
 
   args.state.player.render_ui(args)
 
-  # debug
-  y = $HEIGHT
-  args.state.ghosts.each.with_index(1) do |g, i|
-    r = g.is_in_beam ? 255 : 0
-    if g.is_in_beam
-      args.outputs.borders << [g.x,g.y,g.w,g.h, 255, 0, 0]
-    end
-    args.outputs.labels << [10, y, "#{g.id} has free will: #{g.has_free_will}, on beam: ", 0, 0, 0]
-    args.outputs.labels << [330, y, "#{g.is_in_beam}", r, 0, 0]
-    y -= 30
-  end
+  display_debug(args)
 
-  args.outputs.labels << [$WIDTH - 200, 80, "Disposal: #{args.state.disposal.total_ghosts}", 255, 255, 255]
 
 
 end
@@ -58,23 +48,25 @@ end
 def calc args
   handle_input(args)
 
-  # spawn ghost
-  args.state.ghosts << Ghost.spawn if can_spawn_ghost?(args)
+  if can_spawn_ghost?(args)
+    args.state.ghosts << Ghost.spawn
+  end
 
   args.state.player.calc(args)
 
   args.state.ghosts.each do |g|
+    # beam always technically exists, but should only exist to ghost if player is shooting
     beam = args.state.player.is_shooting ? args.state.player.beam : nil
-    g.calc(args, beam)
 
-    if !g.has_free_will && !g.is_in_beam
-      g.is_in_beam = true
+
+    if g.should_be_caught_by_beam?(beam)
+      g.stick_to_beam(beam)
       args.state.player.add_ghost_to_beam(g)
-    elsif g.has_free_will && g.is_in_beam
-      g.is_in_beam = false
-      args.state.player.remove_ghost_from_beam(g)
     end
+
+    g.calc(args.state.tick_count)
   end
+
 end
 
 def handle_input(args)
@@ -98,5 +90,28 @@ end
 def render_debug args
   args.outputs.labels << [10, $HEIGHT, "Tick Count: #{args.state.tick_count}", 255, 255, 255]
 
+end
+
+def remove_ghost(args, ghost)
+  index = args.state.ghosts.find_index do |gh|
+    gh.id == ghost.id
+  end
+
+  args.state.ghosts.slice!(index)
+end
+
+def display_debug args
+  y = $HEIGHT
+  # Ghost.all.each.with_index(1) do |g, i|
+  #   r = g.is_in_beam ? 255 : 0
+  #   if g.is_in_beam
+  #     args.outputs.borders << [g.x,g.y,g.w,g.h, 255, 0, 0]
+  #   end
+  #   args.outputs.labels << [10, y, "#{g.id} has free will: #{g.has_free_will}, on beam: ", 0, 0, 0]
+  #   args.outputs.labels << [330, y, "#{g.is_in_beam}", r, 0, 0]
+  #   y -= 30
+  # end
+
+  args.outputs.labels << [$WIDTH - 200, 80, "Disposal: #{args.state.disposal.total_ghosts}", 255, 255, 255]
 end
 

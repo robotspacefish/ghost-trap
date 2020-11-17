@@ -6,9 +6,11 @@ class Ghost < Entity
   @@FLICKER_THRESHOLD = 255/2
   @@ID = 1
 
+  @@all = []
+
   def initialize(x, y)
+    # puts "initiating ghost at #{x}, #{y}"
     super(x, y, 80, 80, "sprites/circle-white.png", false)
-    puts "initiating ghost at #{x}, #{y}"
     @is_flickering = false
     @is_invulnerable = false
     @has_free_will = true
@@ -20,7 +22,28 @@ class Ghost < Entity
     @has_been_in_beam = false # for debug
   end
 
-  def calc(args, beam)
+  def self.all
+    @@all
+  end
+
+
+  def should_be_caught_by_beam?(b)
+    if self.is_inside_beam?(b) && !self.is_invulnerable
+      self.is_in_beam = true
+      self.has_free_will = false
+    end
+
+    self.is_in_beam
+  end
+
+  def should_be_released_from_beam?
+    self.has_free_will = true
+    self.is_in_beam = false
+
+    self.is_in_beam
+  end
+
+  def calc(tick_count)
     # use different sprite if ghost is on beam
     self.sprite_path = !self.is_in_beam ? "sprites/circle-white.png" : "sprites/circle-gray.png"
 
@@ -31,28 +54,30 @@ class Ghost < Entity
     # keep in bounds
     self.y = $HEIGHT if self.y < 0 || self.y > $HEIGHT
 
-    if beam && self.is_caught_in_beam(beam)
-      self.has_been_in_beam = true if !self.has_been_in_beam # debug
+    self.toggle_flickering if tick_count % 60 == 0 && rand < 0.5
 
-      # center ghost over beam
-      self.has_free_will = false
-      diff = self.w - beam.w
-      self.x = beam.x - diff/2
-    else
-      self.has_free_will = true
+    self.flicker(tick_count) if self.is_flickering
 
-      # keep above y=300
-      self.y += self.y >= 300 ? -0.5 : 0.5
-
-      self.wobble if args.state.tick_count % 10 == 0
-    end
-
-    self.toggle_flickering if args.state.tick_count % 60 == 0 && rand < 0.5
-
-    self.flicker(args) if self.is_flickering
-
+    self.move_freely(tick_count) if self.has_free_will
     # debug
     # args.outputs.labels << [$WIDTH - 200, 100, self.alpha, 255, 255, 255]
+  end
+
+  def stick_to_beam(beam)
+    self.has_been_in_beam = true if !self.has_been_in_beam # debug
+
+    # center ghost over beam
+    diff = self.w - beam.w
+    self.x = beam.x - diff/2
+  end
+
+  def move_freely(tick_count)
+    self.has_free_will = true
+
+    # keep above y=300
+    self.y += self.y >= 300 ? -0.5 : 0.5
+
+    self.wobble if tick_count % 10 == 0
   end
 
   def wobble
@@ -60,9 +85,9 @@ class Ghost < Entity
     self.y += rand >= 0.5 ? -10 : 10
   end
 
-  def flicker(args)
+  def flicker(tick_count)
     # TODO FIX stop at max 255, min 0
-    self.alpha = (255 * Math.sin(args.state.tick_count/60 * 0.5 * Math::PI/10))
+    self.alpha = (255 * Math.sin(tick_count/60 * 0.5 * Math::PI/10))
 
     # hacky but keeps alpha from going negative
     self.alpha = 20 if self.alpha < 20
@@ -95,11 +120,13 @@ class Ghost < Entity
     # TODO randomly and flicker in
     x = random_int(20, $WIDTH - 100) # TODO subtract ghost width
     y = random_int(400, $HEIGHT - 100)
+
     Ghost.new(x, y)
   end
 
-  def is_caught_in_beam(b)
-    !self.is_invulnerable && self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
+  def is_inside_beam?(b)
+    return false if !b
+    self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
   end
 
   def serialize

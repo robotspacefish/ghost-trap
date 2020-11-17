@@ -56,7 +56,8 @@ def calc args
   Ghost.all.each do |g|
     beam = args.state.player.is_shooting ? args.state.player.beam : nil
 
-    g.calc(args, beam)
+    # g.calc(args.state.tick_count, beam)
+    g.is_inside_beam_and_catchable(beam) ? g.get_stuck_in_beam(beam) : g.move_freely
 
     if g.should_be_caught_by_beam?
       args.state.player.add_ghost_to_beam(g)

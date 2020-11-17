@@ -46,7 +46,7 @@ class Ghost < Entity
     Ghost.all.slice!(index)
   end
 
-  def calc(tick_count, beam)
+  def calc(tick_count)
     # use different sprite if ghost is on beam
     self.sprite_path = !self.is_in_beam ? "sprites/circle-white.png" : "sprites/circle-gray.png"
 
@@ -57,28 +57,30 @@ class Ghost < Entity
     # keep in bounds
     self.y = $HEIGHT if self.y < 0 || self.y > $HEIGHT
 
-    if beam && self.is_caught_in_beam(beam)
-      self.has_been_in_beam = true if !self.has_been_in_beam # debug
-
-      # center ghost over beam
-      self.has_free_will = false
-      diff = self.w - beam.w
-      self.x = beam.x - diff/2
-    else
-      self.has_free_will = true
-
-      # keep above y=300
-      self.y += self.y >= 300 ? -0.5 : 0.5
-
-      self.wobble if tick_count % 10 == 0
-    end
-
     self.toggle_flickering if tick_count % 60 == 0 && rand < 0.5
 
     self.flicker(tick_count) if self.is_flickering
 
     # debug
     # args.outputs.labels << [$WIDTH - 200, 100, self.alpha, 255, 255, 255]
+  end
+
+  def get_stuck_in_beam(beam)
+    self.has_been_in_beam = true if !self.has_been_in_beam # debug
+
+    # center ghost over beam
+    self.has_free_will = false
+    diff = self.w - beam.w
+    self.x = beam.x - diff/2
+  end
+
+  def move_freely
+    self.has_free_will = true
+
+    # keep above y=300
+    self.y += self.y >= 300 ? -0.5 : 0.5
+
+    self.wobble if tick_count % 10 == 0
   end
 
   def wobble
@@ -121,10 +123,11 @@ class Ghost < Entity
     # TODO randomly and flicker in
     x = random_int(20, $WIDTH - 100) # TODO subtract ghost width
     y = random_int(400, $HEIGHT - 100)
-    Ghost.new(x, y)
+     @@all << Ghost.new(x, y)
   end
 
-  def is_caught_in_beam(b)
+  def is_inside_beam_and_catchable(b)
+    return false if !b
     !self.is_invulnerable && self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
   end
 

@@ -10,11 +10,12 @@ def defaults args
   args.state.player ||= Player.new
   args.state.disposal ||= Disposal.new(args.state.player.y - 30)
   args.state.ghosts ||= []
-  args.state.mode ||= :play
+  # args.state.mode ||= :play
 end
 
 def render args
-  render_play(args) if args.state.mode == :play
+  # render_play(args) if args.state.mode == :play
+  render_play(args)
 end
 
 def render_play(args)
@@ -25,12 +26,10 @@ def render_play(args)
   args.outputs.sprites << args.state.disposal.render
 
   # ghosts
-  # args.outputs.sprites <<  args.state.ghosts.map { |g| g.render }
   args.outputs.sprites <<  args.state.ghosts.map { |g| g.render }
 
   # player
   args.outputs.sprites << args.state.player.render
-  # args.outputs.solids << [args.state.player.beam.x, args.state.player.beam.y, 8, 300, 0, 0, 255]
 
   args.state.player.render_ui(args)
 
@@ -54,14 +53,23 @@ def calc args
 
   args.state.player.calc(args)
 
+  # TODO FIX THIS ENTIRE MESS
+  # if a ghost is colliding with a beam it's inside the beam and has no free will
+  # if the player stops shooting and the pack has space, store the ghosts in the pack
+  # if the pack runs out of space and there are still ghosts on the beam, release the ghosts
+  # maybe replace player ghosts on beam array with a boolean value on each ghost if they're on the beam
+
   args.state.ghosts.each do |g|
     # beam always technically exists, but should only exist to ghost if player is shooting
     beam = args.state.player.is_shooting ? args.state.player.beam : nil
 
-
     if g.should_be_caught_by_beam?(beam)
-      g.stick_to_beam(beam)
+      g.get_caught_in_beam
       args.state.player.add_ghost_to_beam(g)
+    end
+
+    if !g.has_free_will
+      g.stick_to_beam(beam)
     end
 
     g.calc(args.state.tick_count)

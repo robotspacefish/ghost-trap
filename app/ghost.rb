@@ -26,6 +26,7 @@ class Ghost < Entity
     @@all
   end
 
+
   def should_be_caught_by_beam?
     self.is_in_beam = true if !self.is_in_beam && !self.has_free_will && !self.is_invulnerable
 
@@ -125,7 +126,7 @@ class Ghost < Entity
     x = random_int(20, $WIDTH - 100) # TODO subtract ghost width
     y = random_int(400, $HEIGHT - 100)
     puts "spawning at #{x}, #{y}"
-    Ghost.new(x, y)
+    self.all << Ghost.new(x, y)
   end
 
   def is_inside_beam?(b)

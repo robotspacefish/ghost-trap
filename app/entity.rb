@@ -1,6 +1,6 @@
 class Entity
   attr_accessor :x, :y, :w, :h, :sprite_path, :flip, :alpha
-  @@all = []
+  # @@all = []
 
   def initialize(x, y, w, h, sprite_path, flip)
     @w = w
@@ -10,11 +10,6 @@ class Entity
     @sprite_path = sprite_path
     @flip = flip
     @alpha = 255
-    self.class.all << self
-  end
-
-  def self.all
-    @@all
   end
 
   def rect

@@ -20,8 +20,6 @@ class Ghost < Entity
     @@ID += 1
 
     @has_been_in_beam = false # for debug
-
-    @@all << self
   end
 
   def self.all
@@ -123,7 +121,7 @@ class Ghost < Entity
     # TODO randomly and flicker in
     x = random_int(20, $WIDTH - 100) # TODO subtract ghost width
     y = random_int(400, $HEIGHT - 100)
-     @@all << Ghost.new(x, y)
+    puts "spawning at #{x}, #{y}"
   end
 
   def is_inside_beam_and_catchable(b)

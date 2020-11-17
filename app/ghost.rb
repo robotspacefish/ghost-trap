@@ -66,6 +66,7 @@ class Ghost < Entity
 
     self.flicker(tick_count) if self.is_flickering
 
+    self.move_freely(tick_count) if self.has_free_will
     # debug
     # args.outputs.labels << [$WIDTH - 200, 100, self.alpha, 255, 255, 255]
   end

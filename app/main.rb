@@ -58,21 +58,13 @@ def calc args
     # beam always technically exists, but should only exist to ghost if player is shooting
     beam = args.state.player.is_shooting ? args.state.player.beam : nil
 
-    g.calc(args.state.tick_count)
 
     if g.should_be_caught_by_beam?(beam)
       g.stick_to_beam(beam)
       args.state.player.add_ghost_to_beam(g)
-
-    else
-
-      #TODO FIX
-      # ghost should be removed from beam and not added to pack
-      # args.state.player.remove_ghost_from_beam(g) if g.should_be_released_from_beam?
-
-      g.move_freely(args.state.tick_count)
     end
 
+    g.calc(args.state.tick_count)
   end
 
 end

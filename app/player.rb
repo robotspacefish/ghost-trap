@@ -36,7 +36,7 @@ class Player < Entity
 
     self.remove_ghost_from_beam(g)
 
-    Ghost.remove(g)
+    # Ghost.remove(g)
   end
 
   def space_in_pack?

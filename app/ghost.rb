@@ -26,21 +26,21 @@ class Ghost < Entity
     @@all
   end
 
+  def get_caught_in_beam
+    self.is_in_beam = true
+    self.has_free_will = false
+  end
 
   def should_be_caught_by_beam?(b)
-    if self.is_inside_beam?(b) && !self.is_invulnerable
-      self.is_in_beam = true
-      self.has_free_will = false
-    end
-
-    self.is_in_beam
+    # only catch if it is not already caught in beam
+    !self.is_in_beam && self.collides_with_beam?(b) && !self.is_invulnerable
   end
 
   def should_be_released_from_beam?
     self.has_free_will = true
     self.is_in_beam = false
 
-    self.is_in_beam
+    true
   end
 
   def calc(tick_count)
@@ -124,7 +124,7 @@ class Ghost < Entity
     Ghost.new(x, y)
   end
 
-  def is_inside_beam?(b)
+  def collides_with_beam?(b)
     return false if !b
     self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
   end

@@ -43,14 +43,6 @@ class Ghost < Entity
     self.is_in_beam
   end
 
-  def self.remove(ghost)
-    index = Ghost.all.find_index do |gh|
-      gh.id == ghost.id
-    end
-
-    Ghost.all.slice!(index)
-  end
-
   def calc(tick_count)
     # use different sprite if ghost is on beam
     self.sprite_path = !self.is_in_beam ? "sprites/circle-white.png" : "sprites/circle-gray.png"
@@ -129,7 +121,7 @@ class Ghost < Entity
     x = random_int(20, $WIDTH - 100) # TODO subtract ghost width
     y = random_int(400, $HEIGHT - 100)
 
-    self.all << Ghost.new(x, y)
+    Ghost.new(x, y)
   end
 
   def is_inside_beam?(b)

@@ -9,7 +9,7 @@ def defaults args
   # set initial variables
   args.state.player ||= Player.new
   args.state.disposal ||= Disposal.new(args.state.player.y - 30)
-
+  args.state.ghosts ||= []
   args.state.mode ||= :play
 end
 
@@ -26,7 +26,7 @@ def render_play(args)
 
   # ghosts
   # args.outputs.sprites <<  args.state.ghosts.map { |g| g.render }
-  args.outputs.sprites <<  Ghost.all.map { |g| g.render }
+  args.outputs.sprites <<  args.state.ghosts.map { |g| g.render }
 
   # player
   args.outputs.sprites << args.state.player.render
@@ -41,7 +41,7 @@ def render_play(args)
 end
 
 def can_spawn_ghost? args
-  rand >= 0.8 && args.state.tick_count & 60 == 0 && Ghost.all.size < 10
+  rand >= 0.8 && args.state.tick_count & 60 == 0 && args.state.ghosts.size < 10
 end
 
 # update
@@ -49,12 +49,12 @@ def calc args
   handle_input(args)
 
   if can_spawn_ghost?(args)
-    Ghost.spawn
+    args.state.ghosts << Ghost.spawn
   end
 
   args.state.player.calc(args)
 
-  Ghost.all.each do |g|
+  args.state.ghosts.each do |g|
     # beam always technically exists, but should only exist to ghost if player is shooting
     beam = args.state.player.is_shooting ? args.state.player.beam : nil
 
@@ -92,6 +92,14 @@ def render_debug args
 
 end
 
+def remove_ghost(args, ghost)
+  index = args.state.ghosts.find_index do |gh|
+    gh.id == ghost.id
+  end
+
+  args.state.ghosts.slice!(index)
+end
+
 def display_debug args
   y = $HEIGHT
   # Ghost.all.each.with_index(1) do |g, i|
@@ -106,3 +114,4 @@ def display_debug args
 
   args.outputs.labels << [$WIDTH - 200, 80, "Disposal: #{args.state.disposal.total_ghosts}", 255, 255, 255]
 end
+

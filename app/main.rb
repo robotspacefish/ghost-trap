@@ -10,12 +10,11 @@ def defaults args
   args.state.player ||= Player.new
   args.state.disposal ||= Disposal.new(args.state.player.y - 30)
   args.state.ghosts ||= []
-  # args.state.mode ||= :play
+  args.state.mode ||= :play
 end
 
 def render args
-  # render_play(args) if args.state.mode == :play
-  render_play(args)
+  render_play(args) if args.state.mode == :play
 end
 
 def render_play(args)

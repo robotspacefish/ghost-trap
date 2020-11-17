@@ -3,7 +3,7 @@ require 'app/entity.rb'
 class Player < Entity
   attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown
   SPEED = 4
-  MAX_BEAM_POWER = 2
+  MAX_BEAM_POWER = 100
   BEAM_COOLDOWN = 1
 
   def initialize
@@ -20,7 +20,7 @@ class Player < Entity
   end
 
   def calc(args)
-    if self.is_shooting
+    if self.can_shoot? && self.is_shooting
       self.shoot(args)
     else
       self.ghosts_on_beam.each do |g|
@@ -28,6 +28,14 @@ class Player < Entity
           self.store_ghost_in_pack(g, args) : self.remove_ghost_from_beam(g)
       end
     end
+
+    if !self.is_shooting && self.beam_power != MAX_BEAM_POWER
+      self.beam_power += 1
+    end
+  end
+
+  def reset_beam_power
+    self.beam_power = MAX_BEAM_POWER
   end
 
   def store_ghost_in_pack(g, args)
@@ -77,9 +85,16 @@ class Player < Entity
     # center beam on player
     self.beam.x = self.x + self.w/2
 
+    # countdown beam power
+    self.beam_power -= 1
+
     # placeholder beam
     args.outputs.sprites << [self.beam.x, self.beam.y, self.beam.w, self.beam.h, 'sprites/beam.png']
 
+  end
+
+  def can_shoot?
+    self.beam_power > 0
   end
 
   def render_ui(args)
@@ -91,13 +106,16 @@ class Player < Entity
   end
 
   def render_beam_power(args)
-    # TODO
-    # display beam power as a shrinking solid inside border, calc the shrinking by 10ths?
     length = 400
     height = 20
     x = $WIDTH/2 - length/2
     y = 40
+
+    # beam length changes based on how much power is left in beam
+    beam_length = 4 * self.beam_power
+
     args.outputs.labels << [x, y + height + 20, "BEAM POWER", 255, 255, 255]
+    args.outputs.sprites << [x, y, beam_length, height, "sprites/beam_power.png"]
     args.outputs.borders << [x, y, length, height, 0, 0, 255]
   end
 

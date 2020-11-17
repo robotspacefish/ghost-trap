@@ -24,28 +24,30 @@ class Player < Entity
       # TODO FIX: not storing all ghosts from beam even if they fit
       # store whatever ghosts can fit into the backpack and remove them from the beam
       self.ghosts_on_beam.each do |g|
-        self.store_ghost_in_pack(g)
+        self.space_in_pack? ?
+          self.store_ghost_in_pack(g) : self.remove_ghost_from_beam(g)
       end
     end
   end
 
   def store_ghost_in_pack(g)
-    if self.total_ghosts_held < self.backpack_limit
-      # increase total of ghosts in pack
-      self.total_ghosts_held += 1
+    # increase total of ghosts in pack
+    self.total_ghosts_held += 1
 
-      self.remove_ghost_from_beam(g)
+    self.remove_ghost_from_beam(g)
 
-      Ghost.remove(g)
+    Ghost.remove(g)
+  end
 
-    end
-
+  def space_in_pack?
+    self.total_ghosts_held < self.backpack_limit
   end
 
   def remove_ghost_from_beam(g)
     index = self.ghosts_on_beam.find_index { |gh| gh.id == g.id }
     self.ghosts_on_beam.slice!(index)
   end
+
 
   def move_right
     self.flip = false

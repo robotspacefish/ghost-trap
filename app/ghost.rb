@@ -37,7 +37,9 @@ class Ghost < Entity
   end
 
   def should_be_released_from_beam?
-    self.is_in_beam = false if self.has_free_will && self.is_in_beam
+    self.has_free_will = true
+    self.is_in_beam = false
+
     self.is_in_beam
   end
 

@@ -50,7 +50,6 @@ def calc args
 
   if can_spawn_ghost?(args)
     Ghost.spawn
-    puts Ghost.all.size
   end
 
   args.state.player.calc(args)
@@ -61,15 +60,16 @@ def calc args
 
     g.calc(args.state.tick_count)
 
-
-  # TODO FIX ghost has_free_will is set to false in stick to beam, but it relies on has_free_will for should_be_caught_by_beam
-
     if g.should_be_caught_by_beam?(beam)
       g.stick_to_beam(beam)
       args.state.player.add_ghost_to_beam(g)
 
     else
-      args.state.player.remove_ghost_from_beam(g) if g.should_be_released_from_beam?
+
+      #TODO FIX
+      # ghost should be removed from beam and not added to pack
+      # args.state.player.remove_ghost_from_beam(g) if g.should_be_released_from_beam?
+
       g.move_freely(args.state.tick_count)
     end
 
@@ -102,15 +102,15 @@ end
 
 def display_debug args
   y = $HEIGHT
-  Ghost.all.each.with_index(1) do |g, i|
-    r = g.is_in_beam ? 255 : 0
-    if g.is_in_beam
-      args.outputs.borders << [g.x,g.y,g.w,g.h, 255, 0, 0]
-    end
-    args.outputs.labels << [10, y, "#{g.id} has free will: #{g.has_free_will}, on beam: ", 0, 0, 0]
-    args.outputs.labels << [330, y, "#{g.is_in_beam}", r, 0, 0]
-    y -= 30
-  end
+  # Ghost.all.each.with_index(1) do |g, i|
+  #   r = g.is_in_beam ? 255 : 0
+  #   if g.is_in_beam
+  #     args.outputs.borders << [g.x,g.y,g.w,g.h, 255, 0, 0]
+  #   end
+  #   args.outputs.labels << [10, y, "#{g.id} has free will: #{g.has_free_will}, on beam: ", 0, 0, 0]
+  #   args.outputs.labels << [330, y, "#{g.is_in_beam}", r, 0, 0]
+  #   y -= 30
+  # end
 
   args.outputs.labels << [$WIDTH - 200, 80, "Disposal: #{args.state.disposal.total_ghosts}", 255, 255, 255]
 end

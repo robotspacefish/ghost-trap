@@ -33,7 +33,7 @@ def render_play(args)
 
   args.state.player.render_ui(args)
 
-  display_debug(args)
+  # display_debug(args)
 
 
 
@@ -47,29 +47,26 @@ end
 def calc args
   handle_input(args)
 
-  if can_spawn_ghost?(args)
-    args.state.ghosts << Ghost.spawn
-  end
+  args.state.ghosts << Ghost.spawn if can_spawn_ghost?(args)
 
   args.state.player.calc(args)
 
-  # TODO FIX THIS ENTIRE MESS
-  # if a ghost is colliding with a beam it's inside the beam and has no free will
-  # if the player stops shooting and the pack has space, store the ghosts in the pack
-  # if the pack runs out of space and there are still ghosts on the beam, release the ghosts
-  # maybe replace player ghosts on beam array with a boolean value on each ghost if they're on the beam
-
   args.state.ghosts.each do |g|
     # beam always technically exists, but should only exist to ghost if player is shooting
-    beam = args.state.player.is_shooting ? args.state.player.beam : nil
 
-    if g.should_be_caught_by_beam?(beam)
+    if (args.state.player.is_shooting) && g.should_be_caught_by_beam?(args.state.player.beam)
       g.get_caught_in_beam
       args.state.player.add_ghost_to_beam(g)
     end
 
+    if (!args.state.player.is_shooting)
+      # TODO refactor and possible do away with is_in_beam
+      g.has_free_will = true
+      g.is_in_beam = false
+    end
+
     if !g.has_free_will
-      g.stick_to_beam(beam)
+      g.stick_to_beam(args.state.player.beam)
     end
 
     g.calc(args.state.tick_count)
@@ -110,15 +107,15 @@ end
 
 def display_debug args
   y = $HEIGHT
-  # Ghost.all.each.with_index(1) do |g, i|
-  #   r = g.is_in_beam ? 255 : 0
-  #   if g.is_in_beam
-  #     args.outputs.borders << [g.x,g.y,g.w,g.h, 255, 0, 0]
-  #   end
-  #   args.outputs.labels << [10, y, "#{g.id} has free will: #{g.has_free_will}, on beam: ", 0, 0, 0]
-  #   args.outputs.labels << [330, y, "#{g.is_in_beam}", r, 0, 0]
-  #   y -= 30
-  # end
+  args.state.ghosts.each.with_index(1) do |g, i|
+    r = g.is_in_beam ? 255 : 0
+    if g.is_in_beam
+      args.outputs.borders << [g.x,g.y,g.w,g.h, 255, 0, 0]
+    end
+    args.outputs.labels << [10, y, "#{g.id} has free will: #{g.has_free_will}, on beam: ", 0, 0, 0]
+    args.outputs.labels << [330, y, "#{g.is_in_beam}", r, 0, 0]
+    y -= 30
+  end
 
   args.outputs.labels << [$WIDTH - 200, 80, "Disposal: #{args.state.disposal.total_ghosts}", 255, 255, 255]
 end

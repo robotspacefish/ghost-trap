@@ -23,23 +23,6 @@ class Ghost < Entity
     @@all
   end
 
-  def get_caught_in_beam
-    self.is_in_beam = true
-    self.has_free_will = false
-  end
-
-  def should_be_caught_by_beam?(b)
-    # only catch if it is not already caught in beam
-    !self.is_in_beam && self.collides_with_beam?(b) && !self.is_invulnerable
-  end
-
-  def should_be_released_from_beam?
-    self.has_free_will = true
-    self.is_in_beam = false
-
-    true
-  end
-
   def calc(tick_count)
     # use different sprite if ghost is on beam
     self.sprite_path = !self.is_in_beam ? "sprites/circle-white.png" : "sprites/circle-gray.png"
@@ -56,8 +39,29 @@ class Ghost < Entity
     self.flicker(tick_count) if self.is_flickering
 
     self.move_freely(tick_count) if self.has_free_will
-    # debug
-    # args.outputs.labels << [$WIDTH - 200, 100, self.alpha, 255, 255, 255]
+  end
+
+  def collides_with_beam?(b)
+    return false if !b
+    self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
+  end
+
+
+  def get_caught_in_beam
+    self.is_in_beam = true
+    self.has_free_will = false
+  end
+
+  def should_be_caught_by_beam?(b)
+    # only catch if it is not already caught in beam
+    !self.is_in_beam && self.collides_with_beam?(b) && !self.is_invulnerable
+  end
+
+  def should_be_released_from_beam?
+    self.has_free_will = true
+    self.is_in_beam = false
+
+    true
   end
 
   def stick_to_beam(beam)
@@ -91,7 +95,6 @@ class Ghost < Entity
   end
 
   def stop_flickering
-    # puts "stop flickering"
     self.is_flickering = false
     self.is_invulnerable = false
     self.alpha = 255
@@ -103,7 +106,6 @@ class Ghost < Entity
 
   def start_flickering
     if self.has_free_will
-      # puts "start flickering"
       self.is_flickering = true
       self.is_invulnerable = true
     end
@@ -119,11 +121,6 @@ class Ghost < Entity
     y = random_int(400, $HEIGHT - 100)
 
     Ghost.new(x, y)
-  end
-
-  def collides_with_beam?(b)
-    return false if !b
-    self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
   end
 
   def serialize

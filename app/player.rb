@@ -23,18 +23,17 @@ class Player < Entity
     else
       self.ghosts_on_beam.each do |g|
         self.space_in_pack? ?
-          self.store_ghost_in_pack(g) : self.remove_ghost_from_beam(g)
+          self.store_ghost_in_pack(g, args) : self.remove_ghost_from_beam(g)
       end
     end
   end
 
-  def store_ghost_in_pack(g)
-    # increase total of ghosts in pack
+  def store_ghost_in_pack(g, args)
     self.total_ghosts_held += 1
 
     self.remove_ghost_from_beam(g)
 
-    # Ghost.remove(g) # TODO fix need to pass method from main
+    remove_ghost(args, g)
   end
 
   def space_in_pack?
@@ -73,8 +72,6 @@ class Player < Entity
   end
 
   def shoot(args)
-    # self.beam.y += 3
-
     # center beam on player
     self.beam.x = self.x + self.w/2
 

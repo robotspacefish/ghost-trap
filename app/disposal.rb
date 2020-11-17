@@ -8,4 +8,8 @@ class Disposal < Entity
     @is_open = false
     @total_ghosts = 0
   end
+
+  def deposit_ghosts(total_to_add)
+    self.total_ghosts += total_to_add
+  end
 end

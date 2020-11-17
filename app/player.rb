@@ -63,9 +63,13 @@ class Player < Entity
 
   def dispose_of_ghosts(disposal)
     if self.rect.intersect_rect?(disposal.rect)
-      disposal.total_ghosts += self.total_ghosts_held
-      self.total_ghosts_held = 0
+      disposal.deposit_ghosts(self.total_ghosts_held)
+      self.empty_pack
     end
+  end
+
+  def empty_pack
+     self.total_ghosts_held = 0
   end
 
   def shoot(args)

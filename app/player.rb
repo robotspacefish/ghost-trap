@@ -1,9 +1,10 @@
 require 'app/entity.rb'
 
 class Player < Entity
-  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam
+  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown
   SPEED = 4
   MAX_BEAM_POWER = 2
+  BEAM_COOLDOWN = 1
 
   def initialize
     w = 100
@@ -15,6 +16,7 @@ class Player < Entity
 
     @ghosts_on_beam = []
     @beam_power = MAX_BEAM_POWER
+    @beam_cooldown = 0
   end
 
   def calc(args)
@@ -78,19 +80,25 @@ class Player < Entity
     # placeholder beam
     args.outputs.sprites << [self.beam.x, self.beam.y, self.beam.w, self.beam.h, 'sprites/beam.png']
 
-
-    # # debug
-    # args.outputs.labels << [10, $HEIGHT - 20, "#{self.beam.x}, #{self.beam.y}", 255, 255, 255]
   end
 
-  def render_ui args
+  def render_ui(args)
+    self.render_beam_power(args)
+
+
     args.outputs.labels << [$WIDTH - 200, 40, "Ghosts in Pack: #{self.total_ghosts_held}", 255, 255, 255]
     args.outputs.labels << [$WIDTH - 200, 60, "Ghosts on Beam: #{self.ghosts_on_beam.size}", 255, 255, 255]
   end
 
-  def render_beam_power args
+  def render_beam_power(args)
     # TODO
     # display beam power as a shrinking solid inside border, calc the shrinking by 10ths?
+    length = 400
+    height = 20
+    x = $WIDTH/2 - length/2
+    y = 40
+    args.outputs.labels << [x, y + height + 20, "BEAM POWER", 255, 255, 255]
+    args.outputs.borders << [x, y, length, height, 0, 0, 255]
   end
 
   def serialize

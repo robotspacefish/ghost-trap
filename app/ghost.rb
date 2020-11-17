@@ -4,7 +4,6 @@ class Ghost < Entity
   attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam, :id, :has_been_in_beam # <- debug
 
   @@FLICKER_THRESHOLD = 255/2
-  @@ID = 1
 
   @@all = []
 
@@ -15,9 +14,7 @@ class Ghost < Entity
     @is_invulnerable = false
     @has_free_will = true
     @is_in_beam = false
-    @id = @@ID
-
-    @@ID += 1
+    @id = set_id
 
     @has_been_in_beam = false # for debug
   end
@@ -136,4 +133,8 @@ end
 
 def random_int(min, max)
     rand(max - min) + min
+end
+
+def set_id
+  "#{rand}#{rand}"
 end

@@ -57,11 +57,9 @@ class Ghost < Entity
     !self.is_in_beam && self.collides_with_beam?(b) && !self.is_invulnerable
   end
 
-  def should_be_released_from_beam?
+  def release_from_beam
     self.has_free_will = true
     self.is_in_beam = false
-
-    true
   end
 
   def stick_to_beam(beam)

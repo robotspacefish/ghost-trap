@@ -46,7 +46,7 @@ class Ghost < Entity
     Ghost.all.slice!(index)
   end
 
-  def calc(args, beam)
+  def calc(tick_count, beam)
     # use different sprite if ghost is on beam
     self.sprite_path = !self.is_in_beam ? "sprites/circle-white.png" : "sprites/circle-gray.png"
 
@@ -70,12 +70,12 @@ class Ghost < Entity
       # keep above y=300
       self.y += self.y >= 300 ? -0.5 : 0.5
 
-      self.wobble if args.state.tick_count % 10 == 0
+      self.wobble if tick_count % 10 == 0
     end
 
-    self.toggle_flickering if args.state.tick_count % 60 == 0 && rand < 0.5
+    self.toggle_flickering if tick_count % 60 == 0 && rand < 0.5
 
-    self.flicker(args) if self.is_flickering
+    self.flicker(tick_count) if self.is_flickering
 
     # debug
     # args.outputs.labels << [$WIDTH - 200, 100, self.alpha, 255, 255, 255]
@@ -86,9 +86,9 @@ class Ghost < Entity
     self.y += rand >= 0.5 ? -10 : 10
   end
 
-  def flicker(args)
+  def flicker(tick_count)
     # TODO FIX stop at max 255, min 0
-    self.alpha = (255 * Math.sin(args.state.tick_count/60 * 0.5 * Math::PI/10))
+    self.alpha = (255 * Math.sin(tick_count/60 * 0.5 * Math::PI/10))
 
     # hacky but keeps alpha from going negative
     self.alpha = 20 if self.alpha < 20

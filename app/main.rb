@@ -4,6 +4,7 @@ require 'app/require.rb'
 # game dimensions
 $WIDTH = 1280
 $HEIGHT = 720
+MAX_GHOSTS = 10
 
 def defaults args
   # set initial variables
@@ -39,7 +40,7 @@ def render_play(args)
 end
 
 def can_spawn_ghost? args
-  rand >= 0.8 && args.state.tick_count & 60 == 0 && args.state.ghosts.size < 10
+  rand >= 0.8 && args.state.tick_count & 60 == 0 && args.state.ghosts.size < MAX_GHOSTS
 end
 
 # update

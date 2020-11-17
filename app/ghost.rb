@@ -28,6 +28,16 @@ class Ghost < Entity
     @@all
   end
 
+  def should_be_caught_by_beam?
+    g.is_in_beam = true if !g.has_free_will && !g.is_in_beam
+    # g_is_in_beam
+  end
+
+  def should_be_released_from_beam?
+    g.is_in_beam = false if g.has_free_will && g.is_in_beam
+    # g_is_in_beam
+  end
+
   def self.remove(ghost)
     index = Ghost.all.find_index do |gh|
       gh.id == ghost.id

@@ -57,14 +57,20 @@ def calc args
     beam = args.state.player.is_shooting ? args.state.player.beam : nil
 
     g.calc(args, beam)
-    # ????????
-    if !g.has_free_will && !g.is_in_beam
-      g.is_in_beam = true
+
+    if g.should_be_caught_by_beam?
       args.state.player.add_ghost_to_beam(g)
-    elsif g.has_free_will && g.is_in_beam
-      g.is_in_beam = false
+    elsif g.should_be_released_from_beam?
       args.state.player.remove_ghost_from_beam(g)
     end
+    # # ????????
+    # if !g.has_free_will && !g.is_in_beam
+    #   g.is_in_beam = true
+    #   args.state.player.add_ghost_to_beam(g)
+    # elsif g.has_free_will && g.is_in_beam
+    #   g.is_in_beam = false
+    #   args.state.player.remove_ghost_from_beam(g)
+    # end
   end
 
 end

@@ -27,8 +27,11 @@ class Ghost < Entity
   end
 
 
-  def should_be_caught_by_beam?
-    self.is_in_beam = true if !self.is_in_beam && !self.has_free_will && !self.is_invulnerable
+  def should_be_caught_by_beam?(b)
+    if self.is_inside_beam?(b) && !self.is_invulnerable
+      self.is_in_beam = true
+      self.has_free_will = false
+    end
 
     self.is_in_beam
   end
@@ -39,13 +42,11 @@ class Ghost < Entity
   end
 
   def self.remove(ghost)
-    # index = Ghost.all.find_index do |gh|
-    #   gh.id == ghost.id
-    # end
+    index = Ghost.all.find_index do |gh|
+      gh.id == ghost.id
+    end
 
-    # Ghost.all.slice!(index)
-
-    Ghost.all = Ghost.all.filter { |g| g.id != ghost.id}
+    Ghost.all.slice!(index)
   end
 
   def calc(tick_count)
@@ -71,7 +72,6 @@ class Ghost < Entity
     self.has_been_in_beam = true if !self.has_been_in_beam # debug
 
     # center ghost over beam
-    self.has_free_will = false
     diff = self.w - beam.w
     self.x = beam.x - diff/2
   end
@@ -125,7 +125,7 @@ class Ghost < Entity
     # TODO randomly and flicker in
     x = random_int(20, $WIDTH - 100) # TODO subtract ghost width
     y = random_int(400, $HEIGHT - 100)
-    puts "spawning at #{x}, #{y}"
+
     self.all << Ghost.new(x, y)
   end
 

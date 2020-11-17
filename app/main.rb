@@ -53,29 +53,27 @@ def calc args
     puts Ghost.all.size
   end
 
-  # args.state.player.calc(args)
+  args.state.player.calc(args)
 
-  # TODO something broken in here
-  # Ghost.all.each do |g|
-  #   # beam always technically exists, but should only exist to ghost if player is shooting
-  #   beam = args.state.player.is_shooting ? args.state.player.beam : nil
+  Ghost.all.each do |g|
+    # beam always technically exists, but should only exist to ghost if player is shooting
+    beam = args.state.player.is_shooting ? args.state.player.beam : nil
 
-  #   g.calc(args.state.tick_count)
+    g.calc(args.state.tick_count)
 
 
   # TODO FIX ghost has_free_will is set to false in stick to beam, but it relies on has_free_will for should_be_caught_by_beam
 
-  #   if g.is_inside_beam?(beam) && g.should_be_caught_by_beam?
-  #     puts "this ghost should be caught"
-  #     g.stick_to_beam(beam)
-  #     args.state.player.add_ghost_to_beam(g)
+    if g.should_be_caught_by_beam?(beam)
+      g.stick_to_beam(beam)
+      args.state.player.add_ghost_to_beam(g)
 
-  #   else
-  #     args.state.player.remove_ghost_from_beam(g) if g.should_be_released_from_beam?
-  #     g.move_freely(args.state.tick_count)
-  #   end
+    else
+      args.state.player.remove_ghost_from_beam(g) if g.should_be_released_from_beam?
+      g.move_freely(args.state.tick_count)
+    end
 
-  # end
+  end
 
 end
 

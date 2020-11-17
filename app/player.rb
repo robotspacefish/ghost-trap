@@ -35,11 +35,9 @@ class Player < Entity
       self.total_ghosts_held += 1
 
       self.remove_ghost_from_beam(g)
-      # destroy from state TODO move this somewhere else (Ghost.all?)
-      index = args.state.ghosts.find_index do |gh|
-        gh.id == g.id
-      end
-      args.state.ghosts.slice!(index)
+
+      Ghost.remove(g)
+
     end
 
   end

@@ -9,8 +9,8 @@ class Ghost < Entity
   @@all = []
 
   def initialize(x, y)
+    # puts "initiating ghost at #{x}, #{y}"
     super(x, y, 80, 80, "sprites/circle-white.png", false)
-    puts "initiating ghost at #{x}, #{y}"
     @is_flickering = false
     @is_invulnerable = false
     @has_free_will = true
@@ -27,21 +27,24 @@ class Ghost < Entity
   end
 
   def should_be_caught_by_beam?
-    g.is_in_beam = true if !g.has_free_will && !g.is_in_beam
-    # g_is_in_beam
+    self.is_in_beam = true if !self.is_in_beam && !self.has_free_will && !self.is_invulnerable
+
+    self.is_in_beam
   end
 
   def should_be_released_from_beam?
-    g.is_in_beam = false if g.has_free_will && g.is_in_beam
-    # g_is_in_beam
+    self.is_in_beam = false if self.has_free_will && self.is_in_beam
+    self.is_in_beam
   end
 
   def self.remove(ghost)
-    index = Ghost.all.find_index do |gh|
-      gh.id == ghost.id
-    end
+    # index = Ghost.all.find_index do |gh|
+    #   gh.id == ghost.id
+    # end
 
-    Ghost.all.slice!(index)
+    # Ghost.all.slice!(index)
+
+    Ghost.all = Ghost.all.filter { |g| g.id != ghost.id}
   end
 
   def calc(tick_count)
@@ -63,7 +66,7 @@ class Ghost < Entity
     # args.outputs.labels << [$WIDTH - 200, 100, self.alpha, 255, 255, 255]
   end
 
-  def get_stuck_in_beam(beam)
+  def stick_to_beam(beam)
     self.has_been_in_beam = true if !self.has_been_in_beam # debug
 
     # center ghost over beam
@@ -72,7 +75,7 @@ class Ghost < Entity
     self.x = beam.x - diff/2
   end
 
-  def move_freely
+  def move_freely(tick_count)
     self.has_free_will = true
 
     # keep above y=300
@@ -122,11 +125,12 @@ class Ghost < Entity
     x = random_int(20, $WIDTH - 100) # TODO subtract ghost width
     y = random_int(400, $HEIGHT - 100)
     puts "spawning at #{x}, #{y}"
+    Ghost.new(x, y)
   end
 
-  def is_inside_beam_and_catchable(b)
+  def is_inside_beam?(b)
     return false if !b
-    !self.is_invulnerable && self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
+    self.rect.intersect_rect?([b.x, b.y, b.w, b.h])
   end
 
   def serialize

@@ -6,6 +6,8 @@ class Ghost < Entity
   @@FLICKER_THRESHOLD = 255/2
   @@ID = 1
 
+  @@all = []
+
   def initialize(x, y)
     super(x, y, 80, 80, "sprites/circle-white.png", false)
     puts "initiating ghost at #{x}, #{y}"
@@ -18,6 +20,20 @@ class Ghost < Entity
     @@ID += 1
 
     @has_been_in_beam = false # for debug
+
+    @@all << self
+  end
+
+  def self.all
+    @@all
+  end
+
+  def self.remove(ghost)
+    index = Ghost.all.find_index do |gh|
+      gh.id == ghost.id
+    end
+
+    Ghost.all.slice!(index)
   end
 
   def calc(args, beam)

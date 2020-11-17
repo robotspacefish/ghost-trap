@@ -52,18 +52,12 @@ def calc args
   args.state.player.calc(args)
 
   args.state.ghosts.each do |g|
-    # beam always technically exists, but should only exist to ghost if player is shooting
-
     if (args.state.player.is_shooting) && g.should_be_caught_by_beam?(args.state.player.beam)
       g.get_caught_in_beam
       args.state.player.add_ghost_to_beam(g)
     end
 
-    if (!args.state.player.is_shooting)
-      # TODO refactor and possible do away with is_in_beam
-      g.has_free_will = true
-      g.is_in_beam = false
-    end
+    g.release_from_beam if !args.state.player.is_shooting && g.is_in_beam
 
     if !g.has_free_will
       g.stick_to_beam(args.state.player.beam)

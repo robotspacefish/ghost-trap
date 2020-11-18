@@ -87,14 +87,16 @@ def calc_play args
 end
 
 def handle_input(args)
-  args.state.player.move_right if args.inputs.keyboard.d || args.inputs.keyboard.right
-  args.state.player.move_left if args.inputs.keyboard.a || args.inputs.keyboard.left
+  if args.state.mode == :play
+    args.state.player.move_right if args.inputs.keyboard.d || args.inputs.keyboard.right
+    args.state.player.move_left if args.inputs.keyboard.a || args.inputs.keyboard.left
 
 
-  # TODO keydown/keyup
-  args.state.player.is_shooting = args.inputs.keyboard.space  ? true : false
+    # TODO keydown/keyup
+    args.state.player.is_shooting = args.inputs.keyboard.space  ? true : false
 
-  args.state.player.dispose_of_ghosts(args.state.disposal) if args.inputs.keyboard.key_down.e
+    args.state.player.dispose_of_ghosts(args.state.disposal) if args.inputs.keyboard.key_down.e
+  end
 
 end
 

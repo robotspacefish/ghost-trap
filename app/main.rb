@@ -12,10 +12,19 @@ def defaults args
   args.state.disposal ||= Disposal.new(args.state.player.y - 30)
   args.state.ghosts ||= []
   args.state.mode ||= :play
+  args.state.timer ||= 21
 end
 
 def render args
   render_play(args) if args.state.mode == :play
+  render_game_over(args) if args.state.mode == :game_over
+end
+
+def render_game_over(args)
+  args.outputs.solids << [0, 0, $WIDTH, $HEIGHT, 0, 0, 0]
+  args.outputs.labels << [ args.grid.w.half, args.grid.h - 200, "GAME OVER", 255, 255, 255]
+  args.outputs.labels << [args.grid.w.half - 40, args.grid.h.half + 20, "You disposed of #{args.state.disposal.total_ghosts} ghosts", 255, 255, 255]
+
 end
 
 def render_play(args)
@@ -33,8 +42,7 @@ def render_play(args)
 
   args.state.player.render_ui(args)
 
-  # display_debug(args)
-
+  args.outputs.labels  << [ args.grid.w.half, args.grid.h - 40, "time left: #{args.state.timer}" ]
 
 
 end
@@ -46,6 +54,15 @@ end
 # update
 def calc args
   handle_input(args)
+
+  calc_play(args) if args.state.mode == :play
+
+end
+
+def calc_play args
+
+  args.state.timer -= 1 if args.state.tick_count % 60 == 0
+  args.state.mode = :game_over if is_game_over?(args)
 
   args.state.ghosts << Ghost.spawn if can_spawn_ghost?(args)
 
@@ -67,7 +84,6 @@ def calc args
 
     g.calc(args.state.tick_count)
   end
-
 end
 
 def handle_input(args)
@@ -116,3 +132,6 @@ def display_debug args
   args.outputs.labels << [$WIDTH - 200, 80, "Disposal: #{args.state.disposal.total_ghosts}", 255, 255, 255]
 end
 
+def is_game_over?(args)
+  args.state.timer <= 0
+end

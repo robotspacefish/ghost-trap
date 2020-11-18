@@ -2,8 +2,8 @@ require 'app/entity.rb'
 
 class Player < Entity
   attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown
-  SPEED = 4
-  MAX_BEAM_POWER = 100
+  SPEED = 6
+  MAX_BEAM_POWER = 200
   BEAM_COOLDOWN = 1
 
   def initialize
@@ -112,7 +112,7 @@ class Player < Entity
     y = 40
 
     # beam length changes based on how much power is left in beam
-    beam_length = 4 * self.beam_power
+    beam_length = 2 * self.beam_power
 
     args.outputs.labels << [x, y + height + 20, "BEAM POWER", 255, 255, 255]
     args.outputs.sprites << [x, y, beam_length, height, "sprites/beam_power.png"]

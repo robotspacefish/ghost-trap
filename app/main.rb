@@ -49,6 +49,8 @@ def calc args
 
   args.state.ghosts << Ghost.spawn if can_spawn_ghost?(args)
 
+  args.state.disposal.calc(args.state.player)
+
   args.state.player.calc(args)
 
   args.state.ghosts.each do |g|

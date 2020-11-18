@@ -10,7 +10,7 @@ def defaults args
   # set initial variables
   args.state.player ||= Player.new
   args.state.disposal ||= Disposal.new(args.state.player.y - 30)
-  args.state.ghosts ||= []
+  args.state.ghosts ||= 5.map { Ghost.spawn }
   args.state.mode ||= :play
   args.state.timer ||= 21
 end

@@ -33,6 +33,10 @@ class Entity
     ]
   end
 
+  def is_colliding_with?(obj)
+    self.rect.intersect_rect?(obj.rect)
+  end
+
   # override :serialize and return hash to Class can be persisted to disk in the event of an exception
   # def serialize
   #   { sprite_path: sprite_path, flip: flip }

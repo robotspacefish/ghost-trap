@@ -22,8 +22,8 @@ end
 
 def render_game_over(args)
   args.outputs.solids << [0, 0, $WIDTH, $HEIGHT, 0, 0, 0]
-  args.outputs.labels << [ args.grid.w.half, args.grid.h - 200, "GAME OVER", 255, 255, 255]
-  args.outputs.labels << [args.grid.w.half - 40, args.grid.h.half + 20, "You disposed of #{args.state.disposal.total_ghosts} ghosts", 255, 255, 255]
+  args.outputs.labels << [ args.grid.w.half - 40, args.grid.h - 200, "GAME OVER", 255, 255, 255]
+  args.outputs.labels << [args.grid.w.half - 100, args.grid.h.half + 20, "You disposed of #{args.state.disposal.total_ghosts} ghosts", 255, 255, 255]
 
 end
 

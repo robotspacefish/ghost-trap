@@ -1,7 +1,7 @@
 require 'app/entity.rb'
 
 class Player < Entity
-  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown
+  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown, :speed
   SPEED = 6
   MAX_BEAM_POWER = 200
   BEAM_COOLDOWN = 1
@@ -58,12 +58,12 @@ class Player < Entity
 
   def move_right
     self.flip = false
-    self.x += SPEED if self.x + self.w < $WIDTH
+    self.x += self.speed if self.x + self.w < $WIDTH
   end
 
   def move_left
     self.flip = true
-    self.x -= SPEED if self.x > 0
+    self.x -= self.speed if self.x > 0
   end
 
   def add_ghost_to_beam(ghost)

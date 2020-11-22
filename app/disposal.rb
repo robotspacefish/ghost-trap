@@ -2,9 +2,20 @@ require 'app/entity.rb'
 
 class Disposal < Entity
   attr_accessor :total_ghosts, :is_open
+  # CLOSED = {
+  #   sprite_path: 'sprites/closed-canister.png',
+  #   w: 97,
+  #   h: 152
+  # }
 
-  def initialize(y)
-    super(50, y, 80, 80, 'sprites/hexagon-blue.png', false)
+  # OPEN = {
+  #   sprite_path: 'sprites/open-canister.png',
+  #   w: 105,
+  #   h: 174
+  # }
+
+  def initialize
+    super(567, 204, 97, 152, 'sprites/canister.png', false)
     @is_open = false
     @total_ghosts = 0
   end
@@ -18,10 +29,17 @@ class Disposal < Entity
   end
 
   def render
-    self.sprite_path = self.is_open ? 'sprites/hexagon-orange.png' : 'sprites/hexagon-blue.png'
+    # set sprite based on open status
+    # if self.is_open
+    #   self.sprite_path = OPEN[:sprite_path]
+    #   self.w = OPEN[:w]
+    #   self.h = OPEN[:h]
+    # else
+    #   self.sprite_path = CLOSED[:sprite_path]
+    #   self.w = CLOSED[:w]
+    #   self.h = CLOSED[:h]
+    # end
 
     super
   end
 end
-
-# method to change is_open to true/false when colliding with player

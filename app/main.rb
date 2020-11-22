@@ -40,6 +40,7 @@ def render_play(args)
 
   # ghost disposal
   args.outputs.sprites << args.state.disposal.render
+  args.outputs.labels << [600, 311, args.state.disposal.total_ghosts, 255, 255, 255]
 
   # ghosts
   args.outputs.sprites <<  args.state.ghosts.map { |g| g.render }
@@ -48,7 +49,7 @@ def render_play(args)
   args.outputs.sprites << args.state.player.render
 
   # hydrant
-  args.outputs.sprites << [1112, 15, 133, 279, 'sprites/hydrant.png']
+  args.outputs.sprites << [1124, 32, 133, 278, 'sprites/hydrant.png']
 
   args.state.player.render_ui(args)
 

@@ -15,7 +15,7 @@ class Disposal < Entity
   # }
 
   def initialize
-    super(567, 204, 97, 152, 'sprites/canister.png', false)
+    super(566, 221, 99, 154, 'sprites/canister.png', false)
     @is_open = false
     @total_ghosts = 0
   end

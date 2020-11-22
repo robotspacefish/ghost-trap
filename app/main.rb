@@ -9,15 +9,22 @@ MAX_GHOSTS = 10
 def defaults args
   # set initial variables
   args.state.player ||= Player.new
-  args.state.disposal ||= Disposal.new(args.state.player.y - 30)
+  args.state.disposal ||= Disposal.new
   args.state.ghosts ||= 5.map { Ghost.spawn }
-  args.state.mode ||= :play
-  args.state.timer ||= 21
+  args.state.mode ||= :title
+  args.state.timer ||= 20
 end
 
 def render args
+  render_title(args) if args.state.mode == :title
   render_play(args) if args.state.mode == :play
   render_game_over(args) if args.state.mode == :game_over
+end
+
+def render_title(args)
+  args.outputs.solids << [0, 0, $WIDTH, $HEIGHT, 0, 0, 0]
+  args.outputs.labels << [ args.grid.w.half - 40, args.grid.h - 200, "GHOST TRAP", 255, 255, 255]
+  args.outputs.labels << [args.grid.w.half - 100, args.grid.h.half + 20, "Press [SPACEBAR] to Begin", 255, 255, 255]
 end
 
 def render_game_over(args)
@@ -88,6 +95,12 @@ def calc_play args
 end
 
 def handle_input(args)
+  if args.state.mode == :title && args.inputs.keyboard.key_down.space
+    # TODO clear keydown/key press
+    args.state.mode = :play
+  end
+
+
   if args.state.mode == :play
     args.state.player.move_right if args.inputs.keyboard.d || args.inputs.keyboard.right
     args.state.player.move_left if args.inputs.keyboard.a || args.inputs.keyboard.left

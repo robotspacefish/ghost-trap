@@ -2,7 +2,6 @@ require 'app/entity.rb'
 
 class Player < Entity
   attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown, :speed
-  SPEED = 6
   MAX_BEAM_POWER = 200
   BEAM_COOLDOWN = 1
 

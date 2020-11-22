@@ -6,16 +6,18 @@ class Player < Entity
   BEAM_COOLDOWN = 1
 
   def initialize
-    w = 100
-    super($WIDTH/2-w/2, 150, w, 80, "sprites/dragon-0.png", false)
+    w = 117
+    h = 300
+    super($WIDTH/2-w/2, 90, w, h, "sprites/player-export.png", false)
     @total_ghosts_held = 0
     @backpack_limit = 10
-    @beam = {x: (self.x + self.w/2).to_i, y: self.y+60, h: 300, w: 10}
+    @beam = {x: ((self.x + self.w)/2).to_i, y: self.y+h, h: 300, w: 40}
     @is_shooting = false
 
     @ghosts_on_beam = []
     @beam_power = MAX_BEAM_POWER
     @beam_cooldown = 0
+    @speed = 6
   end
 
   def calc(args)
@@ -31,6 +33,7 @@ class Player < Entity
     if !self.is_shooting && self.beam_power != MAX_BEAM_POWER
       self.beam_power += 1
     end
+
   end
 
   def reset_beam_power
@@ -106,15 +109,15 @@ class Player < Entity
     self.render_beam_power(args)
 
 
-    args.outputs.labels << [$WIDTH - 200, 40, "Ghosts in Pack: #{self.total_ghosts_held}", 255, 255, 255]
-    args.outputs.labels << [$WIDTH - 200, 60, "Ghosts on Beam: #{self.ghosts_on_beam.size}", 255, 255, 255]
+    # args.outputs.labels << [$WIDTH - 200, 40, "Ghosts in Pack: #{self.total_ghosts_held}", 255, 255, 255]
+    # args.outputs.labels << [$WIDTH - 200, 60, "Ghosts on Beam: #{self.ghosts_on_beam.size}", 255, 255, 255]
   end
 
   def render_beam_power(args)
     length = 400
     height = 20
     x = $WIDTH/2 - length/2
-    y = 40
+    y = 10
 
     # beam length changes based on how much power is left in beam
     beam_length = 2 * self.beam_power

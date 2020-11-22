@@ -29,7 +29,7 @@ end
 
 def render_play(args)
   # background
-  args.outputs.sprites << [0, 0, $WIDTH, $HEIGHT, 'sprites/wp4470740-1280x720.jpg']
+  args.outputs.sprites << [0, 0, $WIDTH, $HEIGHT, 'sprites/bg.png']
 
   # ghost disposal
   args.outputs.sprites << args.state.disposal.render
@@ -40,11 +40,12 @@ def render_play(args)
   # player
   args.outputs.sprites << args.state.player.render
 
+  # hydrant
+  args.outputs.sprites << [1112, 15, 133, 279, 'sprites/hydrant.png']
+
   args.state.player.render_ui(args)
 
   args.outputs.labels  << [ args.grid.w.half, args.grid.h - 40, "time left: #{args.state.timer}" ]
-
-
 end
 
 def can_spawn_ghost? args
@@ -66,7 +67,7 @@ def calc_play args
 
   args.state.ghosts << Ghost.spawn if can_spawn_ghost?(args)
 
-  args.state.disposal.calc(args.state.player)
+  # args.state.disposal.calc(args.state.player)
 
   args.state.player.calc(args)
 

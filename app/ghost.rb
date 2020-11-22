@@ -25,7 +25,7 @@ class Ghost < Entity
 
   def calc(tick_count)
     # use different sprite if ghost is on beam
-    # self.sprite_path = !self.is_in_beam ? "sprites/circle-white.png" : "sprites/circle-gray.png"
+    self.sprite_path = !self.is_in_beam ? "sprites/ghost80.png" : "sprites/ghost_on_beam.png"
 
     # # debug
     # self.sprite_path = "sprites/circle-red.png" if !self.is_in_beam && self.has_been_in_beam

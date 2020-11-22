@@ -114,7 +114,7 @@ class Player < Entity
     # beam length changes based on how much power is left in beam
     beam_length = 2 * self.beam_power
 
-    args.outputs.labels << [x, y + height + 20, "BEAM POWER", 255, 255, 255]
+    args.outputs.labels << [x, y + height + 20, "BEAM POWER", 0, 0, 0]
     args.outputs.sprites << [x, y, beam_length, height, "sprites/beam_power.png"]
     args.outputs.borders << [x, y, length, height, 0, 0, 255]
   end

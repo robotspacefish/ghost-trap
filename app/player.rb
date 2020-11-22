@@ -88,7 +88,13 @@ class Player < Entity
     self.beam_power -= 1
 
     # placeholder beam
-    args.outputs.sprites << [self.beam.x, self.beam.y, self.beam.w, self.beam.h, 'sprites/beam.png']
+    beam_sprite = 'sprites/beam2.png'
+    if args.state.tick_count % 5== 0
+      # TODO beam sprite change
+    end
+
+    args.outputs.sprites << [ self.beam.x, self.beam.y, self.beam.w, self.beam.h, beam_sprite ]
+
 
   end
 

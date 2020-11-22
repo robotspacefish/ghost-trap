@@ -9,7 +9,7 @@ class Ghost < Entity
 
   def initialize(x, y)
     # puts "initiating ghost at #{x}, #{y}"
-    super(x, y, 80, 80, "sprites/circle-white.png", false)
+    super(x, y, 80, 206, "sprites/ghost80.png", false)
     @is_flickering = false
     @is_invulnerable = false
     @has_free_will = true
@@ -25,10 +25,10 @@ class Ghost < Entity
 
   def calc(tick_count)
     # use different sprite if ghost is on beam
-    self.sprite_path = !self.is_in_beam ? "sprites/circle-white.png" : "sprites/circle-gray.png"
+    # self.sprite_path = !self.is_in_beam ? "sprites/circle-white.png" : "sprites/circle-gray.png"
 
-    # debug
-    self.sprite_path = "sprites/circle-red.png" if !self.is_in_beam && self.has_been_in_beam
+    # # debug
+    # self.sprite_path = "sprites/circle-red.png" if !self.is_in_beam && self.has_been_in_beam
 
 
     # keep in bounds

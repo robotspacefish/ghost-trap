@@ -84,8 +84,8 @@ class Player < Entity
   end
 
   def shoot(args)
-    # center beam on player
-    self.beam.x = self.x + self.w/2
+    # center beam on player (stance 1)
+    self.beam.x = self.flip ? self.x + 32 : self.x + 36
 
     # countdown beam power
     self.beam_power -= 1

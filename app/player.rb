@@ -18,6 +18,14 @@ class Player < Entity
     @beam_power = MAX_BEAM_POWER
     @beam_cooldown = 0
     @speed = 6
+  def set_sprite
+    path = "sprites/player_stance_"
+
+    if self.space_in_pack?
+      self.sprite_path = "#{path}01_green.png"
+    else
+      self.sprite_path = "#{path}01_red.png"
+    end
   end
 
   def calc(args)
@@ -105,6 +113,12 @@ class Player < Entity
 
   def can_shoot?
     self.beam_power > 0
+  end
+
+  def render
+    self.set_sprite
+
+    super
   end
 
   def render_ui(args)

@@ -6,12 +6,12 @@ class Player < Entity
   BEAM_COOLDOWN = 1
 
   def initialize
-    w = 117
+    w = 99
     h = 300
-    super($WIDTH/2-w/2, 90, w, h, "sprites/player-export.png", false)
+    super($WIDTH/2-w/2, 90, w, h, "sprites/player_stance_01_green.png", false)
     @total_ghosts_held = 0
     @backpack_limit = 10
-    @beam = {x: ((self.x + self.w)/2).to_i, y: self.y+h, h: 300, w: 40}
+    @beam = {x: ((self.x + self.w)/2).to_i, y: self.y+h, h: 300, w: 23}
     @is_shooting = false
 
     @ghosts_on_beam = []
@@ -91,7 +91,7 @@ class Player < Entity
     self.beam_power -= 1
 
     # placeholder beam
-    beam_sprite = 'sprites/beam2.png'
+    beam_sprite = 'sprites/beam_electric.png'
     if args.state.tick_count % 5== 0
       # TODO beam sprite change
     end

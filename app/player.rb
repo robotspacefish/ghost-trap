@@ -30,10 +30,12 @@ class Player < Entity
       end
     end
 
-    if !self.is_shooting && self.beam_power != MAX_BEAM_POWER
-      self.beam_power += 1
-    end
+    self.refill_beam if !self.is_shooting && self.beam_power != MAX_BEAM_POWER
 
+  end
+
+  def refill_beam
+    self.beam_power += 1
   end
 
   def reset_beam_power

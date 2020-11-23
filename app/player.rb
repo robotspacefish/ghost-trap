@@ -8,8 +8,8 @@ class Player < Entity
   def initialize
     w = 99
     h = 300
-    super($WIDTH/2-w/2, 90, w, h, "sprites/player_stance_01_green.png", false)
-    @total_ghosts_held = 0
+    super($WIDTH/2-w/2, 90, w, h, "sprites/player_green_01.png", false)
+    @total_ghosts_held = 0 # total ghosts in pack
     @backpack_limit = 10
     @beam = {x: ((self.x + self.w)/2).to_i, y: self.y+h, h: 300, w: 23}
     @is_shooting = false
@@ -18,13 +18,21 @@ class Player < Entity
     @beam_power = MAX_BEAM_POWER
     @beam_cooldown = 0
     @speed = 6
+    @is_walking = false
+
+  end
+
+  def total_ghosts_on_beam
+    self.ghosts_on_beam.size
+  end
+
   def set_sprite
-    path = "sprites/player_stance_"
+    path = "sprites/player_"
 
     if self.space_in_pack?
-      self.sprite_path = "#{path}01_green.png"
+      self.sprite_path = "#{path}green_01.png"
     else
-      self.sprite_path = "#{path}01_red.png"
+      self.sprite_path = "#{path}red_01.png"
     end
   end
 

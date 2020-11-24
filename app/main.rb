@@ -59,7 +59,7 @@ def render_play(args)
   combo_sprite = nil
 
   if total_ghosts_on_beam > 1
-    combo_sprite = "sprites/#{args.state.player.total_ghosts_on_beam}x.png"
+    combo_sprite = "sprites/#{total_ghosts_on_beam}x.png"
     args.outputs.sprites << [1010, 670, 49, 42, combo_sprite]
     args.outputs.sprites << [1070, 670, 183, 43, "sprites/combo.png"]
   end

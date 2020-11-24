@@ -55,14 +55,23 @@ def render_play(args)
 
   args.outputs.labels  << [ args.grid.w.half, args.grid.h - 40, "time left: #{args.state.timer}" ]
 
-  total_ghosts_on_beam = args.state.player.total_ghosts_on_beam
-  combo_sprite = nil
+  # display combo, if there is one & if player can catch ghosts
+  if args.state.player.space_in_pack?
+    total_ghosts_on_beam = args.state.player.total_ghosts_on_beam
+    combo_sprite = nil
 
-  if total_ghosts_on_beam > 1
-    combo_sprite = "sprites/#{total_ghosts_on_beam}x.png"
-    args.outputs.sprites << [1010, 670, 49, 42, combo_sprite]
-    args.outputs.sprites << [1070, 670, 183, 43, "sprites/combo.png"]
+    if total_ghosts_on_beam > 1
+      combo_sprite = "sprites/#{total_ghosts_on_beam}x.png"
+      args.outputs.sprites << [1010, 670, 49, 42, combo_sprite]
+      args.outputs.sprites << [1070, 670, 183, 43, "sprites/combo.png"]
+    end
   end
+
+  # if pack is full, show 'empty pack!' text
+  if !args.state.player.space_in_pack?
+    args.outputs.sprites << [980, 660, 270, 51, "sprites/empty-pack.png"]
+  end
+
 end
 
 def can_spawn_ghost? args
@@ -80,7 +89,7 @@ end
 def calc_play args
 
   args.state.timer -= 1 if args.state.tick_count % 60 == 0
-  args.state.mode = :game_over if is_game_over?(args)
+  # args.state.mode = :game_over if is_game_over?(args)
 
   args.state.ghosts << Ghost.spawn if can_spawn_ghost?(args)
 

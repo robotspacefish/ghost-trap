@@ -54,6 +54,15 @@ def render_play(args)
   args.state.player.render_ui(args)
 
   args.outputs.labels  << [ args.grid.w.half, args.grid.h - 40, "time left: #{args.state.timer}" ]
+
+  total_ghosts_on_beam = args.state.player.total_ghosts_on_beam
+  combo_sprite = nil
+
+  if total_ghosts_on_beam > 1
+    combo_sprite = "sprites/#{args.state.player.total_ghosts_on_beam}x.png"
+    args.outputs.sprites << [1010, 670, 49, 42, combo_sprite]
+    args.outputs.sprites << [1070, 670, 183, 43, "sprites/combo.png"]
+  end
 end
 
 def can_spawn_ghost? args

@@ -6,7 +6,7 @@ class Player < Entity
   BEAM_COOLDOWN = 1
 
   def initialize
-    w = 99
+    w = 114
     h = 300
     super($WIDTH/2-w/2, 90, w, h, "sprites/player_green_1.png", false)
     @total_ghosts_held = 0 # total ghosts in pack
@@ -19,6 +19,7 @@ class Player < Entity
     @beam_cooldown = 0
     @speed = 6
     @is_walking = false
+    @sprite_frame = 0
 
   end
 
@@ -27,17 +28,19 @@ class Player < Entity
   end
 
   def set_sprite
-    path = "sprites/player_"
 
-    if self.space_in_pack?
-      self.sprite_path = "#{path}green_#{self.sprite_frame+1}.png"
-    else
-      self.sprite_path = "#{path}red_01.png"
-    end
+    status_color = self.space_in_pack? ? "green" : "red"
+   self.sprite_path = "sprites/player_#{status_color}_#{self.sprite_frame+1}.png"
+
+  end
+
+  def stop_moving
+    self.is_walking = false
   end
 
   def calc(args)
     self.sprite_frame = self.is_walking ? args.state.tick_count.idiv(6).mod(2) : 0
+
     if self.can_shoot? && self.is_shooting
       self.shoot(args)
     else

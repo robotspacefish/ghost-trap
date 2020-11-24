@@ -99,8 +99,12 @@ def calc_play args
 
   args.state.ghosts.each do |g|
     if (args.state.player.is_shooting) && g.should_be_caught_by_beam?(args.state.player.beam)
-      g.get_caught_in_beam
-      args.state.player.add_ghost_to_beam(g)
+
+      # only allows ghosts that can fit in pack to be caught on beam
+      if args.state.player.total_ghosts_held + args.state.player.ghosts_on_beam.size < args.state.player.backpack_limit
+        g.get_caught_in_beam
+        args.state.player.add_ghost_to_beam(g)
+      end
     end
 
     g.release_from_beam if !args.state.player.is_shooting && g.is_in_beam

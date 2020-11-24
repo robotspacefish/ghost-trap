@@ -1,14 +1,14 @@
 require 'app/entity.rb'
 
 class Player < Entity
-  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown, :speed
+  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown, :speed, :is_walking, :sprite_frame
   MAX_BEAM_POWER = 200
   BEAM_COOLDOWN = 1
 
   def initialize
     w = 99
     h = 300
-    super($WIDTH/2-w/2, 90, w, h, "sprites/player_green_01.png", false)
+    super($WIDTH/2-w/2, 90, w, h, "sprites/player_green_1.png", false)
     @total_ghosts_held = 0 # total ghosts in pack
     @backpack_limit = 10
     @beam = {x: ((self.x + self.w)/2).to_i, y: self.y+h, h: 300, w: 23}
@@ -30,13 +30,14 @@ class Player < Entity
     path = "sprites/player_"
 
     if self.space_in_pack?
-      self.sprite_path = "#{path}green_01.png"
+      self.sprite_path = "#{path}green_#{self.sprite_frame+1}.png"
     else
       self.sprite_path = "#{path}red_01.png"
     end
   end
 
   def calc(args)
+    self.sprite_frame = self.is_walking ? args.state.tick_count.idiv(6).mod(2) : 0
     if self.can_shoot? && self.is_shooting
       self.shoot(args)
     else
@@ -77,11 +78,13 @@ class Player < Entity
 
 
   def move_right
+    self.is_walking = true
     self.flip = false
     self.x += self.speed if self.x + self.w < $WIDTH
   end
 
   def move_left
+    self.is_walking = true
     self.flip = true
     self.x -= self.speed if self.x > 0
   end
@@ -103,7 +106,7 @@ class Player < Entity
 
   def shoot(args)
     # center beam on player (stance 1)
-    self.beam.x = self.flip ? self.x + 32 : self.x + 36
+    self.beam.x = self.flip ? self.x + 40 : self.x + 44
 
     # countdown beam power
     self.beam_power -= 1

@@ -103,6 +103,7 @@ def handle_input(args)
 
 
   if args.state.mode == :play
+    args.state.player.stop_moving if !args.inputs.keyboard.d || !args.inputs.keyboard.right || !args.inputs.keyboard.a || !args.inputs.keyboard.left
     args.state.player.move_right if args.inputs.keyboard.d || args.inputs.keyboard.right
     args.state.player.move_left if args.inputs.keyboard.a || args.inputs.keyboard.left
 

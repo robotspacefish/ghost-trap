@@ -44,10 +44,18 @@ class Player < Entity
     if self.can_shoot? && self.is_shooting
       self.shoot(args)
     else
-      self.ghosts_on_beam.each do |g|
-        self.space_in_pack? ?
-          self.store_ghost_in_pack(g, args) : self.remove_ghost_from_beam(g)
+      ghost_total = 0
+      if self.total_ghosts_on_beam > 0
+        self.ghosts_on_beam.each do |g|
+          self.space_in_pack? ?
+            self.store_ghost_in_pack(g, args) : self.remove_ghost_from_beam(g)
+
+          ghost_total += 1
+        end
+
+        add_score(args, ghost_total)
       end
+
     end
 
     self.refill_beam if !self.is_shooting && self.beam_power != MAX_BEAM_POWER

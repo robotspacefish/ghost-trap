@@ -5,7 +5,7 @@ require 'app/require.rb'
 $WIDTH = 1280
 $HEIGHT = 720
 MAX_GHOSTS = 10
-$numbers = [
+NUMBER_SPRITES = [
   {w: 60, h: 88},
   {w: 32, h: 82},
   {w: 57, h: 86},
@@ -52,7 +52,7 @@ def render_timer(args)
   y = args.grid.h - 120
   timer_str.each_char do |ch|
     num = ch.to_i
-    args.outputs.sprites << args.outputs.sprites  << [ x, y, $numbers[num][:w], $numbers[num][:h], "sprites/numbers/#{ch}.png"]
+    args.outputs.sprites << args.outputs.sprites  << [ x, y, NUMBER_SPRITES[num][:w], NUMBER_SPRITES[num][:h], "sprites/numbers/#{ch}.png"]
     x += 56
   end
 

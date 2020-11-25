@@ -35,8 +35,8 @@ end
 
 def render_title(args)
   args.outputs.solids << [0, 0, $WIDTH, $HEIGHT, 0, 0, 0]
-  args.outputs.labels << [ args.grid.w.half - 40, args.grid.h - 200, "GHOST TRAP", 255, 255, 255]
-  args.outputs.labels << [args.grid.w.half - 100, args.grid.h.half + 20, "Press [SPACEBAR] to Begin", 255, 255, 255]
+  args.outputs.sprites << [0, 0, $WIDTH, $HEIGHT, "sprites/title-screen.png"]
+  args.outputs.labels << [args.grid.w.half - 120, 100, "Press [SPACEBAR] to Begin", 255, 255, 255]
 end
 
 def render_game_over(args)

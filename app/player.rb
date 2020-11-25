@@ -62,6 +62,10 @@ class Player < Entity
 
   end
 
+  def can_fit_all_beam_ghosts_in_pack?
+    self.total_ghosts_held + self.ghosts_on_beam.size < self.backpack_limit
+  end
+
   def refill_beam
     self.beam_power += 1
   end
@@ -134,7 +138,7 @@ class Player < Entity
   end
 
   def can_shoot?
-    self.beam_power > 0
+    self.beam_power > 0 && self.can_fit_all_beam_ghosts_in_pack?
   end
 
   def render

@@ -25,6 +25,20 @@ def defaults args
   args.state.ghosts ||= 5.map { Ghost.spawn }
   args.state.mode ||= :title
   args.state.timer ||= 20
+  args.state.score ||= 0
+end
+
+def add_score(args, total_ghosts)
+  # scoring
+  # 1 ghost = 10pts
+  # each additional ghost on beam = extra 10pts each
+  # if ghosts on beam > 5, each additional ghost on beam = extra 20pts each
+  puts "add_score for #{total_ghosts}"
+  # 3 ghosts = 30points + 20 points
+  points = total_ghosts * 10
+  # bonus_points = total_ghosts > 5 ? (total_ghosts - 1) * 20 : (total_ghosts - 1) * 10
+  bonus_points = (total_ghosts - 1) * 10
+  args.state.score += points + bonus_points
 end
 
 def render args
@@ -81,7 +95,7 @@ def render_play(args)
 
   render_timer(args)
 
-  # display combo, if there is one & if player can catch ghosts
+  # display combo, if there is one, & if player can catch ghosts
   if args.state.player.space_in_pack?
     total_ghosts_on_beam = args.state.player.total_ghosts_on_beam
     combo_sprite = nil
@@ -98,6 +112,9 @@ def render_play(args)
     args.outputs.sprites << [980, 660, 270, 51, "sprites/empty-pack.png"]
   end
 
+  # display score
+  args.outputs.labels << [10, 700, args.state.score, 0, 0, 0]
+
 end
 
 def can_spawn_ghost? args
@@ -113,7 +130,6 @@ def calc args
 end
 
 def calc_play args
-
   args.state.timer -= 1 if args.state.tick_count % 60 == 0
   # args.state.mode = :game_over if is_game_over?(args)
 
@@ -130,6 +146,8 @@ def calc_play args
       if args.state.player.total_ghosts_held + args.state.player.ghosts_on_beam.size < args.state.player.backpack_limit
         g.get_caught_in_beam
         args.state.player.add_ghost_to_beam(g)
+
+        puts args.state.player.total_ghosts_on_beam
       end
     end
 

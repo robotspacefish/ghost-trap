@@ -5,6 +5,18 @@ require 'app/require.rb'
 $WIDTH = 1280
 $HEIGHT = 720
 MAX_GHOSTS = 10
+$numbers = [
+  {w: 60, h: 88},
+  {w: 32, h: 82},
+  {w: 57, h: 86},
+  {w: 59, h: 88},
+  {w: 86, h: 88},
+  {w: 61, h: 88},
+  {w: 56, h: 85},
+  {w: 64, h: 88},
+  {w: 71, h: 88},
+  {w: 65, h: 88}
+]
 
 def defaults args
   # set initial variables
@@ -34,6 +46,20 @@ def render_game_over(args)
 
 end
 
+def render_timer(args)
+  timer_str = args.state.timer.to_s
+  x = args.grid.w.half - 60
+  y = args.grid.h - 120
+  timer_str.each_char do |ch|
+    num = ch.to_i
+    args.outputs.sprites << args.outputs.sprites  << [ x, y, $numbers[num][:w], $numbers[num][:h], "sprites/numbers/#{ch}.png"]
+    x += 56
+  end
+
+
+end
+
+
 def render_play(args)
   # background
   args.outputs.sprites << [0, 0, $WIDTH, $HEIGHT, 'sprites/bg.png']
@@ -53,7 +79,7 @@ def render_play(args)
 
   args.state.player.render_ui(args)
 
-  args.outputs.labels  << [ args.grid.w.half, args.grid.h - 40, "time left: #{args.state.timer}" ]
+  render_timer(args)
 
   # display combo, if there is one & if player can catch ghosts
   if args.state.player.space_in_pack?

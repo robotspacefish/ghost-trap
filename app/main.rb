@@ -63,8 +63,13 @@ end
 def create_sprite_nums(number, x, y, size = nil)
   number_str = number.to_s
   sprites = []
-  divide_by = size == 's' ? 3 : 1
+  divide_by =  1
   spacing = 56
+
+  if size == 's'
+     divide_by = 3
+     spacing -= 30
+  end
 
   number_str.each_char do |ch|
     num = ch.to_i

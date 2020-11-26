@@ -34,6 +34,10 @@ class Player < Entity
 
   end
 
+  def has_ghosts_on_beam?
+    self.total_ghosts_on_beam > 0
+  end
+
   def stop_moving
     self.is_walking = false
   end

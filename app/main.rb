@@ -132,8 +132,7 @@ def render_play(args)
   end
 
   # display score
-  args.outputs.labels << [10, 700, args.state.score, 0, 0, 0]
-
+  args.outputs.sprites << create_sprite_nums(args.state.score, 10, 680, 's')
 end
 
 def can_spawn_ghost? args

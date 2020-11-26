@@ -60,19 +60,33 @@ def render_game_over(args)
 
 end
 
+def create_sprite_nums(number, x, y, size = nil)
+  number_str = number.to_s
+  sprites = []
+  divide_by = size == 's' ? 3 : 1
+  spacing = 56
+
+  number_str.each_char do |ch|
+    num = ch.to_i
+
+    w = NUMBER_SPRITES[num][:w] / divide_by
+    h = NUMBER_SPRITES[num][:h] / divide_by
+
+    sprites << [ x, y,w, h, "sprites/numbers/#{ch}.png"]
+    x += spacing
+  end
+
+  sprites
+end
+
 def render_timer(args)
   timer_str = args.state.timer.to_s
   x = args.grid.w.half - 60
   y = args.grid.h - 120
-  timer_str.each_char do |ch|
-    num = ch.to_i
-    args.outputs.sprites << args.outputs.sprites  << [ x, y, NUMBER_SPRITES[num][:w], NUMBER_SPRITES[num][:h], "sprites/numbers/#{ch}.png"]
-    x += 56
-  end
 
+  args.outputs.sprites << create_sprite_nums(args.state.timer, x, y)
 
 end
-
 
 def render_play(args)
   # background

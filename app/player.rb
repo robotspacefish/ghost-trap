@@ -46,19 +46,17 @@ class Player < Entity
     self.sprite_frame = self.is_walking ? args.state.tick_count.idiv(6).mod(2) : 0
 
     if self.can_shoot? && self.is_shooting
+
       self.shoot(args)
-    else
-      ghost_total = 0
-      if self.total_ghosts_on_beam > 0
-        self.ghosts_on_beam.each do |g|
-          self.space_in_pack? ?
+
+    elsif self.has_ghosts_on_beam?
+
+      add_score(args, self.total_ghosts_on_beam)
+
       self.store_ghosts_from_beam_to_pack(args)
 
-          ghost_total += 1
-        end
+      self.ghosts_on_beam.clear
 
-        add_score(args, ghost_total)
-      end
 
     end
 
@@ -132,7 +130,6 @@ class Player < Entity
     # countdown beam power
     self.beam_power -= 1
 
-    # placeholder beam
     beam_sprite = 'sprites/beam_electric.png'
     if args.state.tick_count % 5== 0
       # TODO beam sprite change

@@ -52,7 +52,7 @@ class Player < Entity
       if self.total_ghosts_on_beam > 0
         self.ghosts_on_beam.each do |g|
           self.space_in_pack? ?
-            self.store_ghost_in_pack(g, args) : self.remove_ghost_from_beam(g)
+      self.store_ghosts_from_beam_to_pack(args)
 
           ghost_total += 1
         end
@@ -64,6 +64,10 @@ class Player < Entity
 
     self.refill_beam if !self.is_shooting && self.beam_power != MAX_BEAM_POWER
 
+  end
+
+  def store_ghosts_from_beam_to_pack(args)
+    self.ghosts_on_beam.each { |g| self.store_ghost_in_pack(g, args) }
   end
 
   def can_fit_all_beam_ghosts_in_pack?

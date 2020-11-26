@@ -81,8 +81,6 @@ class Player < Entity
   def store_ghost_in_pack(g, args)
     self.total_ghosts_held += 1
 
-    self.remove_ghost_from_beam(g)
-
     remove_ghost(args, g)
   end
 

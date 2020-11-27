@@ -1,3 +1,4 @@
+require 'app/ghost_trap.rb'
 require 'app/entity.rb'
 require 'app/ghost.rb'
 require 'app/player.rb'

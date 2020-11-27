@@ -1,5 +1,3 @@
-require 'app/entity.rb'
-
 class Disposal < Entity
   attr_accessor :total_ghosts, :is_open
   # CLOSED = {

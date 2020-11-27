@@ -1,5 +1,3 @@
-require 'app/entity.rb'
-
 class Ghost < Entity
   attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam, :id, :has_been_in_beam # <- debug
 

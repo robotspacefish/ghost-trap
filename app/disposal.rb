@@ -19,6 +19,7 @@ class Disposal < Entity
   end
 
   def deposit_ghosts(total_to_add)
+    play_sound(:dispose)
     self.total_ghosts += total_to_add
   end
 

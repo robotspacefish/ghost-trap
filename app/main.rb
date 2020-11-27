@@ -41,6 +41,17 @@ def add_score(total_ghosts)
   $ghost_trap.add_score(points + bonus_points)
 end
 
+def play_sound(type)
+  sound = nil
+
+  case type
+  when :dispose
+    sound = "sounds/collect-burst.wav"
+  end
+
+  $ghost_trap.play_sound(sound)
+end
+
 def create_sprite_nums(number, x, y, size = nil)
   number_str = number.to_s
   sprites = []

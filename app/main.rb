@@ -149,7 +149,8 @@ end
 
 def calc_play args
   args.state.timer -= 1 if args.state.tick_count % 60 == 0
-  # args.state.mode = :game_over if is_game_over?(args)
+
+  args.state.mode = :game_over if is_game_over?(args)
 
   args.state.ghosts << Ghost.spawn if can_spawn_ghost?(args)
 
@@ -190,6 +191,7 @@ def handle_input(args)
 
 
     # TODO keydown/keyup
+     #TODO if !self.can_shoot? make sound when space is pressed
     args.state.player.is_shooting = args.inputs.keyboard.space  ? true : false
 
     args.state.player.dispose_of_ghosts(args.state.disposal) if args.inputs.keyboard.key_down.e

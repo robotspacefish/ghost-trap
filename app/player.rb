@@ -23,38 +23,72 @@ class Player < Entity
 
   end
 
+  def set_sprite
+    status_color = self.space_in_pack? ? "green" : "red"
+    self.sprite_path = "sprites/player_#{status_color}_#{self.sprite_frame+1}.png"
+  end
+
   def total_ghosts_on_beam
     self.ghosts_on_beam.size
   end
 
-  def set_sprite
-
-    status_color = self.space_in_pack? ? "green" : "red"
-   self.sprite_path = "sprites/player_#{status_color}_#{self.sprite_frame+1}.png"
-
+  def has_ghosts_on_beam?
+    self.total_ghosts_on_beam > 0
   end
 
-  def stop_moving
-    self.is_walking = false
+  def store_ghosts_from_beam_to_pack(args)
+    self.ghosts_on_beam.each { |g| self.store_ghost_in_pack(g, args) }
+  end
+
+  def can_fit_all_beam_ghosts_in_pack?
+    self.total_ghosts_held + self.ghosts_on_beam.size < self.backpack_limit
+  end
+
+  def add_ghost_to_beam(ghost)
+    self.ghosts_on_beam << ghost
+  end
+
+  def store_ghost_in_pack(g, args)
+    self.total_ghosts_held += 1
+
+    remove_ghost(args, g)
+  end
+
+  def space_in_pack?
+    self.total_ghosts_held < self.backpack_limit
+  end
+
+  def remove_ghost_from_beam(g)
+    index = self.ghosts_on_beam.find_index { |gh| gh.id == g.id }
+    self.ghosts_on_beam.slice!(index)
+  end
+
+  def dispose_of_ghosts(disposal)
+    if self.is_colliding_with?(disposal)
+      disposal.deposit_ghosts(self.total_ghosts_held)
+      self.empty_pack
+    end
+  end
+
+  def empty_pack
+     self.total_ghosts_held = 0
   end
 
   def calc(args)
     self.sprite_frame = self.is_walking ? args.state.tick_count.idiv(6).mod(2) : 0
 
     if self.can_shoot? && self.is_shooting
+
       self.shoot(args)
-    else
-      ghost_total = 0
-      if self.total_ghosts_on_beam > 0
-        self.ghosts_on_beam.each do |g|
-          self.space_in_pack? ?
-            self.store_ghost_in_pack(g, args) : self.remove_ghost_from_beam(g)
 
-          ghost_total += 1
-        end
+    elsif self.has_ghosts_on_beam?
 
-        add_score(args, ghost_total)
-      end
+      add_score(args, self.total_ghosts_on_beam)
+
+      self.store_ghosts_from_beam_to_pack(args)
+
+      self.ghosts_on_beam.clear
+
 
     end
 
@@ -70,24 +104,6 @@ class Player < Entity
     self.beam_power = MAX_BEAM_POWER
   end
 
-  def store_ghost_in_pack(g, args)
-    self.total_ghosts_held += 1
-
-    self.remove_ghost_from_beam(g)
-
-    remove_ghost(args, g)
-  end
-
-  def space_in_pack?
-    self.total_ghosts_held < self.backpack_limit
-  end
-
-  def remove_ghost_from_beam(g)
-    index = self.ghosts_on_beam.find_index { |gh| gh.id == g.id }
-    self.ghosts_on_beam.slice!(index)
-  end
-
-
   def move_right
     self.is_walking = true
     self.flip = false
@@ -100,19 +116,8 @@ class Player < Entity
     self.x -= self.speed if self.x > 0
   end
 
-  def add_ghost_to_beam(ghost)
-    self.ghosts_on_beam << ghost
-  end
-
-  def dispose_of_ghosts(disposal)
-    if self.is_colliding_with?(disposal)
-      disposal.deposit_ghosts(self.total_ghosts_held)
-      self.empty_pack
-    end
-  end
-
-  def empty_pack
-     self.total_ghosts_held = 0
+  def stop_moving
+    self.is_walking = false
   end
 
   def shoot(args)
@@ -122,19 +127,16 @@ class Player < Entity
     # countdown beam power
     self.beam_power -= 1
 
-    # placeholder beam
     beam_sprite = 'sprites/beam_electric.png'
     if args.state.tick_count % 5== 0
       # TODO beam sprite change
     end
 
     args.outputs.sprites << [ self.beam.x, self.beam.y, self.beam.w, self.beam.h, beam_sprite ]
-
-
   end
 
   def can_shoot?
-    self.beam_power > 0
+    self.beam_power > 0 && self.can_fit_all_beam_ghosts_in_pack?
   end
 
   def render

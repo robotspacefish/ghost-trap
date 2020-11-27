@@ -27,12 +27,10 @@ class Ghost < Entity
     # use different sprite if ghost is on beam
     self.sprite_path = !self.is_in_beam ? "sprites/ghost80.png" : "sprites/ghost_on_beam.png"
 
-    # # debug
-    # self.sprite_path = "sprites/circle-red.png" if !self.is_in_beam && self.has_been_in_beam
-
-
     # keep in bounds
     self.y = $HEIGHT if self.y < 0 || self.y > $HEIGHT
+    self.x = 0 if self.x < 0
+    self.x = $WIDTH - self.w if self.x + self.w > $WIDTH
 
     self.toggle_flickering if tick_count % 60 == 0 && rand < 0.5
 

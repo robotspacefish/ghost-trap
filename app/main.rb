@@ -34,10 +34,8 @@ def add_score(args, total_ghosts)
   # each additional ghost on beam = extra 10pts each
   # if ghosts on beam > 5, each additional ghost on beam = extra 20pts each
   puts "add_score for #{total_ghosts}"
-  # 3 ghosts = 30points + 20 points
   points = total_ghosts * 10
-  # bonus_points = total_ghosts > 5 ? (total_ghosts - 1) * 20 : (total_ghosts - 1) * 10
-  bonus_points = (total_ghosts - 1) * 10
+  bonus_points = total_ghosts > 5 ? (total_ghosts - 1) * 20 : (total_ghosts - 1) * 10
   args.state.score += points + bonus_points
 end
 
@@ -58,21 +56,42 @@ def render_game_over(args)
   args.outputs.labels << [ args.grid.w.half - 40, args.grid.h - 200, "GAME OVER", 255, 255, 255]
   args.outputs.labels << [args.grid.w.half - 100, args.grid.h.half + 20, "You disposed of #{args.state.disposal.total_ghosts} ghosts", 255, 255, 255]
 
+  args.outputs.labels << [args.grid.w.half - 100, args.grid.h.half - 20, "Score:  #{args.state.score}", 255, 255, 255]
+
+end
+
+def create_sprite_nums(number, x, y, size = nil)
+  number_str = number.to_s
+  sprites = []
+  divide_by =  1
+  spacing = 56
+
+  if size == 's'
+     divide_by = 3
+     spacing -= 30
+  end
+
+  number_str.each_char do |ch|
+    num = ch.to_i
+
+    w = NUMBER_SPRITES[num][:w] / divide_by
+    h = NUMBER_SPRITES[num][:h] / divide_by
+
+    sprites << [ x, y,w, h, "sprites/numbers/#{ch}.png"]
+    x += spacing
+  end
+
+  sprites
 end
 
 def render_timer(args)
   timer_str = args.state.timer.to_s
   x = args.grid.w.half - 60
   y = args.grid.h - 120
-  timer_str.each_char do |ch|
-    num = ch.to_i
-    args.outputs.sprites << args.outputs.sprites  << [ x, y, NUMBER_SPRITES[num][:w], NUMBER_SPRITES[num][:h], "sprites/numbers/#{ch}.png"]
-    x += 56
-  end
 
+  args.outputs.sprites << create_sprite_nums(args.state.timer, x, y)
 
 end
-
 
 def render_play(args)
   # background
@@ -113,8 +132,7 @@ def render_play(args)
   end
 
   # display score
-  args.outputs.labels << [10, 700, args.state.score, 0, 0, 0]
-
+  args.outputs.sprites << create_sprite_nums(args.state.score, 10, 680, 's')
 end
 
 def can_spawn_ghost? args
@@ -131,7 +149,8 @@ end
 
 def calc_play args
   args.state.timer -= 1 if args.state.tick_count % 60 == 0
-  # args.state.mode = :game_over if is_game_over?(args)
+
+  args.state.mode = :game_over if is_game_over?(args)
 
   args.state.ghosts << Ghost.spawn if can_spawn_ghost?(args)
 
@@ -140,25 +159,22 @@ def calc_play args
   args.state.player.calc(args)
 
   args.state.ghosts.each do |g|
-    if (args.state.player.is_shooting) && g.should_be_caught_by_beam?(args.state.player.beam)
+    if args.state.player.is_shooting &&
+      g.has_free_will &&
+      g.should_be_caught_by_beam?(args.state.player.beam) &&
+      args.state.player.can_fit_all_beam_ghosts_in_pack?
 
-      # only allows ghosts that can fit in pack to be caught on beam
-      if args.state.player.total_ghosts_held + args.state.player.ghosts_on_beam.size < args.state.player.backpack_limit
         g.get_caught_in_beam
         args.state.player.add_ghost_to_beam(g)
 
-        puts args.state.player.total_ghosts_on_beam
-      end
     end
 
-    g.release_from_beam if !args.state.player.is_shooting && g.is_in_beam
-
-    if !g.has_free_will
-      g.stick_to_beam(args.state.player.beam)
-    end
+    g.stick_to_beam(args.state.player.beam) if !g.has_free_will
 
     g.calc(args.state.tick_count)
+
   end
+
 end
 
 def handle_input(args)
@@ -175,6 +191,7 @@ def handle_input(args)
 
 
     # TODO keydown/keyup
+     #TODO if !self.can_shoot? make sound when space is pressed
     args.state.player.is_shooting = args.inputs.keyboard.space  ? true : false
 
     args.state.player.dispose_of_ghosts(args.state.disposal) if args.inputs.keyboard.key_down.e

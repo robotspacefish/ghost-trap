@@ -34,10 +34,8 @@ def add_score(args, total_ghosts)
   # each additional ghost on beam = extra 10pts each
   # if ghosts on beam > 5, each additional ghost on beam = extra 20pts each
   puts "add_score for #{total_ghosts}"
-  # 3 ghosts = 30points + 20 points
   points = total_ghosts * 10
-  # bonus_points = total_ghosts > 5 ? (total_ghosts - 1) * 20 : (total_ghosts - 1) * 10
-  bonus_points = (total_ghosts - 1) * 10
+  bonus_points = total_ghosts > 5 ? (total_ghosts - 1) * 20 : (total_ghosts - 1) * 10
   args.state.score += points + bonus_points
 end
 

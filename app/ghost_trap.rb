@@ -172,4 +172,9 @@ class GhostTrap
     outputs.labels << [grid.w.half - 100, grid.h.half - 20, "Score:  #{state.score}", 255, 255, 255]
   end
 
+  def play_sound(sound)
+    puts sound
+    outputs.sounds << sound
+  end
+
 end

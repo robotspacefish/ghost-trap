@@ -158,25 +158,22 @@ def calc_play args
   args.state.player.calc(args)
 
   args.state.ghosts.each do |g|
-    if (args.state.player.is_shooting) && g.should_be_caught_by_beam?(args.state.player.beam)
+    if args.state.player.is_shooting &&
+      g.has_free_will &&
+      g.should_be_caught_by_beam?(args.state.player.beam) &&
+      args.state.player.can_fit_all_beam_ghosts_in_pack?
 
-      # only allows ghosts that can fit in pack to be caught on beam
-      if args.state.player.total_ghosts_held + args.state.player.ghosts_on_beam.size < args.state.player.backpack_limit
         g.get_caught_in_beam
         args.state.player.add_ghost_to_beam(g)
 
-        puts args.state.player.total_ghosts_on_beam
-      end
     end
 
-    g.release_from_beam if !args.state.player.is_shooting && g.is_in_beam
-
-    if !g.has_free_will
-      g.stick_to_beam(args.state.player.beam)
-    end
+    g.stick_to_beam(args.state.player.beam) if !g.has_free_will
 
     g.calc(args.state.tick_count)
+
   end
+
 end
 
 def handle_input(args)

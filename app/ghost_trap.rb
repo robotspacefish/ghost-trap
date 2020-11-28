@@ -45,7 +45,7 @@ class GhostTrap
     if !freeze?
       state.ghosts << Ghost.spawn if can_spawn_ghost?
 
-      # state.disposal.calc(state.player)
+      state.disposal.calc(state.tick_count)
 
       player.calc(outputs, state.tick_count)
 
@@ -94,11 +94,15 @@ class GhostTrap
   end
 
   def process_inputs
-    if state.mode == :title && inputs.keyboard.key_down.space
+    if (state.mode == :title || state.mode == :instructions) && inputs.keyboard.key_down.space
       inputs.keyboard.clear
       state.mode = :play
     end
 
+    if state.mode == :title && inputs.keyboard.key_down.i
+      inputs.keyboard.clear
+      state.mode = :instructions
+    end
 
     if state.mode == :play
       player.stop_moving if !inputs.keyboard.d || !inputs.keyboard.right || !inputs.keyboard.a || !inputs.keyboard.left
@@ -182,7 +186,8 @@ class GhostTrap
   def render_title
     render_full_screen_sprite("sprites/title-screen.png")
 
-    render_press_key_text("Press [SPACEBAR] to Begin", - 240)
+    outputs.labels << center_text("Press [SPACEBAR] to Start Game", - 240, 0, 255, 0)
+    outputs.labels << center_text("Press [I] for Instructions", - 270)
   end
 
   def set_countdown_sprite

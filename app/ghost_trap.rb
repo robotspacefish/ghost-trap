@@ -92,10 +92,8 @@ class GhostTrap
       state.player.move_right if inputs.keyboard.d || inputs.keyboard.right
       state.player.move_left if inputs.keyboard.a || inputs.keyboard.left
 
-
-      # TODO keydown/keyup
-      #TODO if !self.can_shoot? make sound when space is pressed
-      state.player.is_shooting = inputs.keyboard.space  ? true : false
+      state.player.is_shooting = true if inputs.keyboard.key_down.space
+      state.player.is_shooting = false if inputs.keyboard.key_up.space
 
       state.player.dispose_of_ghosts(state.disposal) if inputs.keyboard.key_down.e && state.player.has_ghosts_in_pack?
     end

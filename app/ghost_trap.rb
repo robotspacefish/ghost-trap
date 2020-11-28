@@ -14,6 +14,7 @@ class GhostTrap
     process_inputs
   end
 
+
   def defaults
     state.player ||= Player.new
     state.disposal ||= Disposal.new
@@ -21,41 +22,50 @@ class GhostTrap
     state.mode ||= :title
     state.timer ||= 20
     state.score ||= 0
+    state.start_countdown ||= 3
   end
 
   def calc
     calc_play if state.mode == :play
   end
 
+  def freeze?
+    state.start_countdown > 0
+  end
+
   def calc_play
     if state.tick_count % 60 == 0
-      state.timer -= 1
+
       play_sound("sounds/alarm.wav") if state.timer == 5
+
+      freeze? ? state.start_countdown -=1 : state.timer -= 1
     end
 
     state.mode = :game_over if is_game_over?
 
-    state.ghosts << Ghost.spawn if can_spawn_ghost?
+    if !freeze?
+      state.ghosts << Ghost.spawn if can_spawn_ghost?
 
-    # state.disposal.calc(state.player)
+      # state.disposal.calc(state.player)
 
-    state.player.calc(outputs, state.tick_count)
+      state.player.calc(outputs, state.tick_count)
 
-    state.ghosts.each do |g|
-      if state.player.is_shooting &&
-        g.has_free_will &&
-        g.should_be_caught_by_beam?(state.player.beam) &&
-        state.player.can_fit_all_beam_ghosts_in_pack?
+      state.ghosts.each do |g|
+        if state.player.is_shooting &&
+          g.has_free_will &&
+          g.should_be_caught_by_beam?(state.player.beam) &&
+          state.player.can_fit_all_beam_ghosts_in_pack?
 
-          g.get_caught_in_beam
-          state.player.add_ghost_to_beam(g)
+            g.get_caught_in_beam
+            state.player.add_ghost_to_beam(g)
+
+        end
+
+        g.stick_to_beam(state.player.beam) if !g.has_free_will
+
+        g.calc(state.tick_count)
 
       end
-
-      g.stick_to_beam(state.player.beam) if !g.has_free_will
-
-      g.calc(state.tick_count)
-
     end
 
   end
@@ -114,9 +124,34 @@ class GhostTrap
     outputs.labels << [grid.w.half - 120, 100, "Press [SPACEBAR] to Begin", 255, 255, 255]
   end
 
+  def set_countdown_sprite
+    return if !freeze?
+
+    sprite = []
+    path = 'sprites/'
+    x = grid.w.half
+    y = grid.h - 120
+    case state.start_countdown
+    when 3
+      w = 193
+      sprite = [x - w/2, y, w, 67, "#{path}ready.png"]
+    when 2
+      w = 97
+      sprite = [x - w/2, y, w, 57, "#{path}set.png"]
+    when 1
+      w = 416
+      sprite = [x - w/2, y, w, 59, "#{path}catch.png"]
+    end
+
+    sprite
+  end
+
   def render_play
+
+
     # background
     outputs.sprites << [0, 0, $WIDTH, $HEIGHT, 'sprites/bg.png']
+
 
     # ghost disposal
     outputs.sprites << state.disposal.render
@@ -133,7 +168,10 @@ class GhostTrap
 
     state.player.render_beam_power(outputs)
 
-    render_timer
+    # start countdown timer
+    outputs.sprites << set_countdown_sprite if state.start_countdown > 0
+
+    render_timer if !freeze?
 
     # display combo, if there is one, & if player can catch ghosts
     if state.player.space_in_pack?

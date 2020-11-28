@@ -21,7 +21,7 @@ class GhostTrap
     state.mode ||= :title
     state.timer ||= 20
     state.score ||= 0
-    state.start_countdown ||= 3
+    state.countdown ||= 3
   end
 
   def calc
@@ -29,7 +29,7 @@ class GhostTrap
   end
 
   def freeze?
-    state.start_countdown > 0
+    state.countdown > 0
   end
 
   def calc_play
@@ -37,7 +37,7 @@ class GhostTrap
 
       play_sound("sounds/alarm.wav") if state.timer == 5
 
-      freeze? ? state.start_countdown -=1 : state.timer -= 1
+      freeze? ? state.countdown -=1 : state.timer -= 1
     end
 
     state.mode = :game_over if is_game_over?
@@ -118,7 +118,7 @@ class GhostTrap
     if state.mode == :game_over && inputs.keyboard.key_down.space
       inputs.keyboard.clear
       gtk.reset
-      state.start_countdown = 4 # extra second so the entire ready, set, etc appears
+      state.countdown = 4 # extra second so the entire ready, set, etc appears
       state.mode = :play
     end
 
@@ -193,7 +193,7 @@ class GhostTrap
     path = 'sprites/'
     x = grid.w.half
     y = grid.h - 120
-    case state.start_countdown
+    case state.countdown
     when 3
       w = 193
       sprite = [x - w/2, y, w, 67, "#{path}ready.png"]
@@ -231,7 +231,7 @@ class GhostTrap
     player.render_beam_power(outputs)
 
     # start countdown timer
-    outputs.sprites << set_countdown_sprite if state.start_countdown > 0
+    outputs.sprites << set_countdown_sprite if state.countdown > 0
 
     render_timer if !freeze?
 

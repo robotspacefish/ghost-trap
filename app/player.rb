@@ -42,6 +42,10 @@ class Player < Entity
     self.total_ghosts_held + self.ghosts_on_beam.size < self.backpack_limit
   end
 
+  def has_ghosts_in_pack?
+    self.total_ghosts_held > 0
+  end
+
   def add_ghost_to_beam(ghost)
     self.ghosts_on_beam << ghost
   end

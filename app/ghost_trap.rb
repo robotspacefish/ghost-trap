@@ -28,7 +28,10 @@ class GhostTrap
   end
 
   def calc_play
-    state.timer -= 1 if state.tick_count % 60 == 0
+    if state.tick_count % 60 == 0
+      state.timer -= 1
+      play_sound("sounds/alarm.wav") if state.timer == 5
+    end
 
     state.mode = :game_over if is_game_over?
 

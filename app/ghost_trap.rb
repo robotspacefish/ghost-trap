@@ -179,7 +179,7 @@ class GhostTrap
       combo_sprite = nil
 
       if total_ghosts_on_beam > 1
-        combo_sprite = "sprites/#{total_ghosts_on_beam}x.png"
+        combo_sprite = "sprites/combo/#{total_ghosts_on_beam}x.png"
         outputs.sprites << [1010, 670, 49, 42, combo_sprite]
         outputs.sprites << [1070, 670, 183, 43, "sprites/combo.png"]
       end

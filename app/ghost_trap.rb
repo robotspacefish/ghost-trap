@@ -17,7 +17,7 @@ class GhostTrap
   def defaults
     state.player ||= Player.new
     state.disposal ||= Disposal.new
-    state.ghosts ||= 5.map { Ghost.spawn }
+    state.ghosts ||= MAX_GHOSTS.map { Ghost.spawn }
     state.mode ||= :title
     state.timer ||= 20
     state.score ||= 0

@@ -1,5 +1,5 @@
 class Ghost < Entity
-  attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam, :id, :has_been_in_beam # <- debug
+  attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam, :id
 
   @@FLICKER_THRESHOLD = 255/2
 
@@ -14,7 +14,6 @@ class Ghost < Entity
     @is_in_beam = false
     @id = set_id
 
-    @has_been_in_beam = false # for debug
   end
 
   def self.all
@@ -59,8 +58,6 @@ class Ghost < Entity
   end
 
   def stick_to_beam(beam)
-    self.has_been_in_beam = true if !self.has_been_in_beam # debug
-
     # center ghost over beam
     diff = self.w - beam.w
     self.x = beam.x - diff/2
@@ -114,7 +111,7 @@ class Ghost < Entity
   end
 
   def serialize
-    { x: x, y: y, w: w, h: h, is_flickering: is_flickering,  has_free_will: has_free_will, is_in_beam: is_in_beam, id: id, has_been_in_beam: has_been_in_beam }
+    { x: x, y: y, w: w, h: h, is_flickering: is_flickering,  has_free_will: has_free_will, is_in_beam: is_in_beam, id: id}
   end
 end
 

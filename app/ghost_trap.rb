@@ -122,16 +122,67 @@ class GhostTrap
 
   def render
     render_title if state.mode == :title
+    render_instructions if state.mode == :instructions
     render_play if state.mode == :play
     render_game_over if state.mode == :game_over
   end
 
-  def render_title
+  def render_full_screen_sprite(sprite)
     outputs.solids << [0, 0, $WIDTH, $HEIGHT, 0, 0, 0]
 
-    outputs.sprites << [0, 0, $WIDTH, $HEIGHT, "sprites/title-screen.png"]
+    outputs.sprites << [0, 0, $WIDTH, $HEIGHT, sprite]
+  end
 
-    outputs.labels << center_text("Press [SPACEBAR] to Begin", - 240)
+  def render_press_key_text(text, y_offset)
+    outputs.labels << center_text(text, y_offset, 0, 255, 0)
+  end
+
+  def render_instructions
+    render_full_screen_sprite("sprites/instructions-no-text.png")
+
+    render_press_key_text("Press [SPACEBAR] to Begin", -295)
+
+    outputs.labels << center_text("You have 20 seconds to trap as many ghosts as you can.", 330, 255, 255, 0)
+    outputs.labels << center_text("Catch multiple ghosts on your beam at a time for a combo.", 300, 255, 255, 0)
+    outputs.labels << center_text("Your beam energy depletes over time. Stop shooting to regenerate.", 270, 255, 255, 0)
+
+    instruction("Shoot beam", 364, 553)
+    instruction("Move left", 274, 466)
+    instruction("Move right", 274, 378)
+    instruction("Deposit ghosts in canister", 154, 276)
+
+    instruction("Stand in front of canister and", 154, 160)
+    instruction("press E to transfer ghosts", 154, 130)
+    instruction("from backpack", 154, 100)
+
+    instruction("Shoot beam at ghosts to catch them.", 844, 563)
+    instruction("They are automatically stored in your", 844, 533)
+    instruction("pack when you stop shooting", 844, 503)
+
+    instruction("When ghosts are transparent they", 844, 433)
+    instruction("cannot be caught", 844, 403)
+
+    instruction("Ghosts are blue when trapped", 844, 333)
+    instruction("in your beam", 844, 303)
+
+    instruction("Your pack can hold 10 ghosts.", 754, 203)
+    instruction("When the light is red your pack is full.", 754, 173)
+    instruction("You can't shoot with a full pack.", 754, 143)
+    instruction("Deposit ghosts in canister to fit more", 754, 113)
+    instruction("in your pack.", 1024, 83)
+
+
+
+  end
+
+  def instruction(text, x, y)
+    outputs.labels << [x, y, text, 255, 255, 255]
+  end
+
+  def render_title
+    render_full_screen_sprite("sprites/title-screen.png")
+
+    render_press_key_text("Press [SPACEBAR] to Begin", - 240)
   end
 
   def set_countdown_sprite

@@ -6,7 +6,7 @@ class GhostTrap
   end
 
   def tick
-    outputs.sounds << "sounds/Yadu-Rajiv-miniloops-1-22-Adventure-Now.ogg" if state.tick_count == 1
+    outputs.sounds << "sounds/Yadu-Rajiv-miniloops-1-22-Adventure-Now-lowered.ogg" if state.tick_count == 1
 
     defaults
     render

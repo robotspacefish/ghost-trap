@@ -205,8 +205,9 @@ class GhostTrap
 
   def render_game_over
     outputs.solids << [0, 0, $WIDTH, $HEIGHT, 0, 0, 0]
-
-    outputs.labels << [ grid.w.half - 40, grid.h - 200, "GAME OVER", 255, 255, 255]
+    w = 477
+    h = 72
+    outputs.sprites << [grid.w.half - w/2, grid.h.half + h, w, h, "sprites/gameover.png"]
 
     outputs.labels << [grid.w.half - 100, grid.h.half + 20, "You disposed of #{state.disposal.total_ghosts} ghosts", 255, 255, 255]
 
@@ -214,7 +215,6 @@ class GhostTrap
   end
 
   def play_sound(sound)
-    puts sound
     outputs.sounds << sound
   end
 

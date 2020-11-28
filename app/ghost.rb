@@ -32,7 +32,7 @@ class Ghost < Entity
 
     self.toggle_flickering if tick_count % 60 == 0
 
-    self.flicker(tick_count) if self.is_flickering
+    self.flicker if self.is_flickering
 
     self.move_freely(tick_count) if self.has_free_will
   end
@@ -80,7 +80,7 @@ class Ghost < Entity
     self.y += rand >= 0.5 ? -10 : 10
   end
 
-  def flicker(tick_count)
+  def flicker
     self.alpha = 255 * 0.4
   end
 

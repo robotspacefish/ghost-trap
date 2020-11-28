@@ -94,7 +94,7 @@ class GhostTrap
   end
 
   def process_inputs
-    if (state.mode == :title || state.mode == :instructions) && inputs.keyboard.key_down.space
+    if (state.mode == :title || state.mode == :instructions) && inputs.keyboard.key_down.enter
       inputs.keyboard.clear
       state.mode = :play
     end
@@ -115,7 +115,7 @@ class GhostTrap
       player.dispose_of_ghosts(state.disposal) if inputs.keyboard.key_down.e && player.has_ghosts_in_pack?
     end
 
-    if state.mode == :game_over && inputs.keyboard.key_down.space
+    if state.mode == :game_over && inputs.keyboard.key_down.enter
       inputs.keyboard.clear
       gtk.reset
       state.countdown = 4 # extra second so the entire ready, set, etc appears
@@ -140,7 +140,7 @@ class GhostTrap
   def render_instructions
     render_full_screen_sprite("sprites/instructions-no-text.png")
 
-    outputs.labels << center_text("Press [SPACEBAR] to Begin", -295, 0, 255, 0)
+    outputs.labels << center_text("Press [ENTER] to Start Game", -295, 0, 255, 0)
 
     outputs.labels << center_text("You have 20 seconds to trap as many ghosts as you can.", 330, 255, 255, 0)
     outputs.labels << center_text("Catch multiple ghosts on your beam at a time for a combo.", 300, 255, 255, 0)
@@ -182,7 +182,7 @@ class GhostTrap
   def render_title
     render_full_screen_sprite("sprites/title-screen.png")
 
-    outputs.labels << center_text("Press [SPACEBAR] to Start Game", - 240, 0, 255, 0)
+    outputs.labels << center_text("Press [ENTER] to Start Game", - 240, 0, 255, 0)
     outputs.labels << center_text("Press [I] for Instructions", - 270)
   end
 
@@ -277,7 +277,7 @@ class GhostTrap
 
     outputs.labels << center_text("Score:  #{state.score}", -20)
 
-    outputs.labels << center_text("Press [SPACEBAR] to Play Again", - 100)
+    outputs.labels << center_text("Press [ENTER] to Play Again", - 100)
   end
 
   def play_sound(sound)

@@ -70,7 +70,7 @@ class GhostTrap
   end
 
   def can_spawn_ghost?
-    rand >= 0.8 && state.tick_count & 60 == 0 && state.ghosts.size < MAX_GHOSTS
+    state.tick_count & 60 == 0 && state.ghosts.size < MAX_GHOSTS
   end
 
   def is_game_over?

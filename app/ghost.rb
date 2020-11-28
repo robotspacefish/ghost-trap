@@ -6,14 +6,13 @@ class Ghost < Entity
   @@all = []
 
   def initialize(x, y)
-    # puts "initiating ghost at #{x}, #{y}"
     super(x, y, 80, 206, "sprites/ghost80.png", false)
-    @is_flickering = false
-    @is_invulnerable = false
+    @is_flickering = true
+    @is_invulnerable = true
+    @alpha = 255 * 0.4
     @has_free_will = true
     @is_in_beam = false
     @id = set_id
-
   end
 
   def self.all

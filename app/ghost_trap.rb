@@ -47,20 +47,20 @@ class GhostTrap
 
       # state.disposal.calc(state.player)
 
-      state.player.calc(outputs, state.tick_count)
+      player.calc(outputs, state.tick_count)
 
       state.ghosts.each do |g|
-        if state.player.is_shooting &&
+        if player.is_shooting &&
           g.has_free_will &&
-          g.should_be_caught_by_beam?(state.player.beam) &&
-          state.player.can_fit_all_beam_ghosts_in_pack?
+          g.should_be_caught_by_beam?(player.beam) &&
+          player.can_fit_all_beam_ghosts_in_pack?
 
             g.get_caught_in_beam
-            state.player.add_ghost_to_beam(g)
+            player.add_ghost_to_beam(g)
 
         end
 
-        g.stick_to_beam(state.player.beam) if !g.has_free_will
+        g.stick_to_beam(player.beam) if !g.has_free_will
 
         g.calc(state.tick_count)
 
@@ -89,6 +89,10 @@ class GhostTrap
     state.ghosts.slice!(index)
   end
 
+  def player
+    state.player
+  end
+
   def process_inputs
     if state.mode == :title && inputs.keyboard.key_down.space
       inputs.keyboard.clear
@@ -97,20 +101,20 @@ class GhostTrap
 
 
     if state.mode == :play
-      state.player.stop_moving if !inputs.keyboard.d || !inputs.keyboard.right || !inputs.keyboard.a || !inputs.keyboard.left
-      state.player.move_right if inputs.keyboard.d || inputs.keyboard.right
-      state.player.move_left if inputs.keyboard.a || inputs.keyboard.left
+      player.stop_moving if !inputs.keyboard.d || !inputs.keyboard.right || !inputs.keyboard.a || !inputs.keyboard.left
+      player.move_right if inputs.keyboard.d || inputs.keyboard.right
+      player.move_left if inputs.keyboard.a || inputs.keyboard.left
 
-      state.player.is_shooting = true if inputs.keyboard.key_down.space
-      state.player.is_shooting = false if inputs.keyboard.key_up.space
+      player.is_shooting = true if inputs.keyboard.key_down.space
+      player.is_shooting = false if inputs.keyboard.key_up.space
 
-      state.player.dispose_of_ghosts(state.disposal) if inputs.keyboard.key_down.e && state.player.has_ghosts_in_pack?
+      player.dispose_of_ghosts(state.disposal) if inputs.keyboard.key_down.e && player.has_ghosts_in_pack?
     end
 
     if state.mode == :game_over && inputs.keyboard.key_down.space
       inputs.keyboard.clear
       gtk.reset
-      state.start_countdown = 4
+      state.start_countdown = 4 # extra second so the entire ready, set, etc appears
       state.mode = :play
     end
 
@@ -167,12 +171,12 @@ class GhostTrap
     outputs.sprites <<  state.ghosts.map { |g| g.render }
 
     # player
-    outputs.sprites << state.player.render
+    outputs.sprites << player.render
 
     # hydrant
     outputs.sprites << [1124, 32, 133, 278, 'sprites/hydrant.png']
 
-    state.player.render_beam_power(outputs)
+    player.render_beam_power(outputs)
 
     # start countdown timer
     outputs.sprites << set_countdown_sprite if state.start_countdown > 0
@@ -180,8 +184,8 @@ class GhostTrap
     render_timer if !freeze?
 
     # display combo, if there is one, & if player can catch ghosts
-    if state.player.space_in_pack?
-      total_ghosts_on_beam = state.player.total_ghosts_on_beam
+    if player.space_in_pack?
+      total_ghosts_on_beam = player.total_ghosts_on_beam
       combo_sprite = nil
 
       if total_ghosts_on_beam > 1
@@ -192,7 +196,7 @@ class GhostTrap
     end
 
     # if pack is full, show 'empty pack!' text
-    if !state.player.space_in_pack?
+    if !player.space_in_pack?
       outputs.sprites << [980, 660, 270, 51, "sprites/empty-pack.png"]
     end
 

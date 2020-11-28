@@ -121,7 +121,7 @@ class GhostTrap
 
     outputs.sprites << [0, 0, $WIDTH, $HEIGHT, "sprites/title-screen.png"]
 
-    outputs.labels << [grid.w.half - 120, 100, "Press [SPACEBAR] to Begin", 255, 255, 255]
+    outputs.labels << center_text("Press [SPACEBAR] to Begin", - 240)
   end
 
   def set_countdown_sprite

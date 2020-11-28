@@ -81,7 +81,7 @@ class GhostTrap
   end
 
   def process_inputs
-    if state.mode == :title && inputs.keyboard.key_down.space
+    if state.mode == :title && inputs.keyboard.key_down.enter
       # TODO clear keydown/key press
       state.mode = :play
     end
@@ -113,7 +113,7 @@ class GhostTrap
 
     outputs.sprites << [0, 0, $WIDTH, $HEIGHT, "sprites/title-screen.png"]
 
-    outputs.labels << [grid.w.half - 120, 100, "Press [SPACEBAR] to Begin", 255, 255, 255]
+    outputs.labels << [grid.w.half - 120, 100, "Press [ENTER] to Begin", 255, 255, 255]
   end
 
   def render_play

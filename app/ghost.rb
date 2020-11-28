@@ -30,7 +30,7 @@ class Ghost < Entity
     self.x = 0 if self.x < 0
     self.x = $WIDTH - self.w if self.x + self.w > $WIDTH
 
-    self.toggle_flickering if tick_count % 60 == 0 && rand < 0.5
+    self.toggle_flickering if tick_count % 60 == 0
 
     self.flicker(tick_count) if self.is_flickering
 

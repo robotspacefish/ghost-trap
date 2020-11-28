@@ -24,6 +24,9 @@ def tick(args)
   $ghost_trap.inputs = args.inputs
   $ghost_trap.state = args.state
   $ghost_trap.outputs = args.outputs
+  $ghost_trap.gtk = args.gtk
+
+
   $ghost_trap.tick
 end
 

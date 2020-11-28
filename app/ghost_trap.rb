@@ -137,14 +137,10 @@ class GhostTrap
     outputs.sprites << [0, 0, $WIDTH, $HEIGHT, sprite]
   end
 
-  def render_press_key_text(text, y_offset)
-    outputs.labels << center_text(text, y_offset, 0, 255, 0)
-  end
-
   def render_instructions
     render_full_screen_sprite("sprites/instructions-no-text.png")
 
-    render_press_key_text("Press [SPACEBAR] to Begin", -295)
+    outputs.labels << center_text("Press [SPACEBAR] to Begin", -295, 0, 255, 0)
 
     outputs.labels << center_text("You have 20 seconds to trap as many ghosts as you can.", 330, 255, 255, 0)
     outputs.labels << center_text("Catch multiple ghosts on your beam at a time for a combo.", 300, 255, 255, 0)

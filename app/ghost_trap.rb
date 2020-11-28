@@ -1,5 +1,5 @@
 class GhostTrap
-  attr_accessor :grid, :inputs, :state, :outputs
+  attr_accessor :grid, :inputs, :state, :outputs, :gtk
 
   def initialize
     puts "new game"
@@ -13,7 +13,6 @@ class GhostTrap
     calc
     process_inputs
   end
-
 
   def defaults
     state.player ||= Player.new
@@ -106,6 +105,13 @@ class GhostTrap
       state.player.is_shooting = false if inputs.keyboard.key_up.space
 
       state.player.dispose_of_ghosts(state.disposal) if inputs.keyboard.key_down.e && state.player.has_ghosts_in_pack?
+    end
+
+    if state.mode == :game_over && inputs.keyboard.key_down.space
+      inputs.keyboard.clear
+      gtk.reset
+      state.start_countdown = 4
+      state.mode = :play
     end
 
   end
@@ -214,6 +220,8 @@ class GhostTrap
     )
 
     outputs.labels << center_text("Score:  #{state.score}", -20)
+
+    outputs.labels << center_text("Press [SPACEBAR] to Play Again", - 100)
   end
 
   def play_sound(sound)

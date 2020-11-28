@@ -75,3 +75,10 @@ def create_sprite_nums(number, x, y, size = nil)
 
   sprites
 end
+
+def center_text(text, y_offset, r = 255, g = 255, b = 255)
+  grid = $ghost_trap.grid
+  w, h = $ghost_trap.gtk.calcstringbox(text)
+
+  [grid.w.half - w/2, grid.h.half + y_offset, text , r, g, b]
+end

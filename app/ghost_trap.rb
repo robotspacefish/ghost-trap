@@ -209,13 +209,11 @@ class GhostTrap
     h = 72
     outputs.sprites << [grid.w.half - w/2, grid.h.half + h, w, h, "sprites/gameover.png"]
 
-    str = "You disposed of #{state.disposal.total_ghosts} ghosts"
-    w, h = gtk.calcstringbox(str)
-    outputs.labels << [grid.w.half - w/2, grid.h.half + 20, str , 255, 255, 255]
+    outputs.labels << center_text(
+      "You disposed of #{state.disposal.total_ghosts} ghosts", 20
+    )
 
-    str = "Score:  #{state.score}"
-    w, h = gtk.calcstringbox(str)
-    outputs.labels << [grid.w.half - w/2, grid.h.half - 20, str, 255, 255, 255]
+    outputs.labels << center_text("Score:  #{state.score}", -20)
   end
 
   def play_sound(sound)

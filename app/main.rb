@@ -57,7 +57,7 @@ def play_sound(type)
   when :flicker_out
     sound += "spooky-low.wav"
   when :alarm
-    sound += "alarm.wav"
+    sound += "VOLUME_alarm.wav"
   when :fail
     sound += "hit-3.wav"
   end

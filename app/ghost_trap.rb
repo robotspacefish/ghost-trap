@@ -112,6 +112,8 @@ class GhostTrap
       player.is_shooting = true if inputs.keyboard.key_down.space
       player.is_shooting = false if inputs.keyboard.key_up.space
 
+      play_sound("sounds/VOLUME_hit-3.wav") if inputs.keyboard.key_down.space && !player.can_shoot?
+
       player.dispose_of_ghosts(state.disposal) if inputs.keyboard.key_down.e && player.has_ghosts_in_pack?
     end
 

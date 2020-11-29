@@ -131,9 +131,6 @@ class Player < Entity
     self.beam_power -= 1
 
     beam_sprite = 'sprites/beam_electric.png'
-    if tick_count % 5== 0
-      # TODO beam sprite change
-    end
 
     outputs.sprites << [ self.beam.x, self.beam.y, self.beam.w, self.beam.h, beam_sprite ]
   end

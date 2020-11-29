@@ -79,9 +79,6 @@ class Player < Entity
   def calc(outputs, tick_count)
     self.sprite_frame = self.is_walking ? tick_count.idiv(6).mod(2) : 0
 
-
-    # stop_sound(:shoot) if !self.is_shooting
-
     if self.can_shoot? && self.is_shooting
       play_sound(:shoot) if !shoot_sound_playing
       self.shoot_sound_playing = true if !self.shoot_sound_playing

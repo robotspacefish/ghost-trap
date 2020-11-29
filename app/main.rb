@@ -45,14 +45,26 @@ def add_score(total_ghosts)
 end
 
 def play_sound(type)
-  sound = nil
+  sound = "sounds/"
 
   case type
   when :dispose
-    sound = "sounds/collect-burst.wav"
+    sound += "collect-burst.wav"
+  when :shoot
+    sound += "science_fiction_electricity_beam_2.ogg"
+  when :flicker_in
+    sound += "spooky-high.wav"
+  when :flicker_out
+    sound += "spooky-low.wav"
   end
 
   $ghost_trap.play_sound(sound)
+end
+
+def stop_sound(type)
+  # case type
+  # end
+  $ghost_trap.gtk.stop_music
 end
 
 def create_sprite_nums(number, x, y, size = nil)
@@ -79,7 +91,7 @@ def create_sprite_nums(number, x, y, size = nil)
   sprites
 end
 
-def center_text(text, y_offset, r = 255, g = 255, b = 255)
+def center_text(text, y_offset = 0, r = 255, g = 255, b = 255)
   grid = $ghost_trap.grid
   w, h = $ghost_trap.gtk.calcstringbox(text)
 

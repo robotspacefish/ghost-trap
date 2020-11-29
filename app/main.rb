@@ -56,9 +56,13 @@ def play_sound(type)
     sound += "spooky-high.wav"
   when :flicker_out
     sound += "spooky-low.wav"
+  when :alarm
+    sound += "alarm.wav"
+  when :fail
+    sound += "hit-3.wav"
   end
 
-  $ghost_trap.play_sound(sound)
+  $ghost_trap.play_sfx(sound)
 end
 
 def stop_sound(type)

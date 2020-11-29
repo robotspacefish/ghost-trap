@@ -93,35 +93,49 @@ class GhostTrap
     state.player
   end
 
+  def handle_play_inputs
+    player.stop_moving if !inputs.keyboard.d || !inputs.keyboard.right || !inputs.keyboard.a || !inputs.keyboard.left
+    player.move_right if inputs.keyboard.d || inputs.keyboard.right
+    player.move_left if inputs.keyboard.a || inputs.keyboard.left
+
+    player.is_shooting = true if inputs.keyboard.key_down.space
+    player.is_shooting = false if inputs.keyboard.key_up.space
+
+    play_sound(:fail) if inputs.keyboard.key_down.space && !player.can_shoot?
+
+    player.dispose_of_ghosts(state.disposal) if inputs.keyboard.key_down.e && player.has_ghosts_in_pack?
+  end
+
+  def handle_game_over_inputs
+    return if !inputs.keyboard.key_down.enter
+
+    inputs.keyboard.clear
+    gtk.reset
+    state.countdown = 4 # extra second so the entire ready, set, etc appears
+    state.mode = :play
+
+  end
+
   def process_inputs
-    if (state.mode == :title || state.mode == :instructions) && inputs.keyboard.key_down.enter
-      inputs.keyboard.clear
-      state.mode = :play
-    end
+    case state.mode
+    when :title
+      state.mode = :play if inputs.keyboard.key_down.enter
 
-    if state.mode == :title && inputs.keyboard.key_down.i
-      inputs.keyboard.clear
-      state.mode = :instructions
-    end
+      state.mode = :instructions if inputs.keyboard.key_down.i
 
-    if state.mode == :play
-      player.stop_moving if !inputs.keyboard.d || !inputs.keyboard.right || !inputs.keyboard.a || !inputs.keyboard.left
-      player.move_right if inputs.keyboard.d || inputs.keyboard.right
-      player.move_left if inputs.keyboard.a || inputs.keyboard.left
+      state.mode = :credits if inputs.keyboard.key_down.c
 
-      player.is_shooting = true if inputs.keyboard.key_down.space
-      player.is_shooting = false if inputs.keyboard.key_up.space
+    when :instructions
+      state.mode = :play if inputs.keyboard.key_down.enter
 
-      play_sound(:fail) if inputs.keyboard.key_down.space && !player.can_shoot?
+    when :credits
+      state.mode = :title if inputs.keyboard.key_down.enter
 
-      player.dispose_of_ghosts(state.disposal) if inputs.keyboard.key_down.e && player.has_ghosts_in_pack?
-    end
+    when :play
+      handle_play_inputs
 
-    if state.mode == :game_over && inputs.keyboard.key_down.enter
-      inputs.keyboard.clear
-      gtk.reset
-      state.countdown = 4 # extra second so the entire ready, set, etc appears
-      state.mode = :play
+    when :game_over
+      handle_game_over_inputs
     end
 
   end
@@ -129,6 +143,7 @@ class GhostTrap
   def render
     render_title if state.mode == :title
     render_instructions if state.mode == :instructions
+    render_credits if state.mode == :credits
     render_play if state.mode == :play
     render_game_over if state.mode == :game_over
   end
@@ -179,11 +194,29 @@ class GhostTrap
     outputs.labels << [x, y, text, 255, 255, 255]
   end
 
+  def render_credits
+    outputs.solids << [0, 0, $WIDTH, $HEIGHT, 0, 0, 0]
+    outputs.labels << center_text("Concept, art, and programming by robotspacefish - robotspacefish.dev", 270, 255, 255, 0)
+    outputs.labels << center_text("Sound Effects by:", 200, 255, 255, 0)
+    outputs.labels << center_text("Zapsplat.com", 170)
+    outputs.labels << center_text("David Stearns - outspacer.itch.io", 140)
+    outputs.labels << center_text("Little Robot Sound Factory - littlerobotsoundfactory.com", 110)
+
+    outputs.labels << center_text("Music:", 30, 255, 255, 0)
+    outputs.labels << center_text("Adventure Now by Yadu Rajiv - yadurajiv.com/mini-loops")
+
+    outputs.labels << center_text("Press [ENTER] to Return to Title Screen", - 240, 0, 255, 0)
+
+  end
+
   def render_title
     render_full_screen_sprite("sprites/title-screen.png")
 
     outputs.labels << center_text("Press [ENTER] to Start Game", - 240, 0, 255, 0)
     outputs.labels << center_text("Press [I] for Instructions", - 270)
+
+    outputs.labels << [$WIDTH - 300, 30, "Press [C] to View Credits", 255, 255, 0]
+
     outputs.labels << center_text("©2020 robotspacefish!", - 330)
   end
 

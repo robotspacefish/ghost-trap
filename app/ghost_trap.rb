@@ -182,6 +182,7 @@ class GhostTrap
 
     outputs.labels << center_text("Press [ENTER] to Start Game", - 240, 0, 255, 0)
     outputs.labels << center_text("Press [I] for Instructions", - 270)
+    outputs.labels << center_text("©2020 robotspacefish!", - 330)
   end
 
   def set_countdown_sprite

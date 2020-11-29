@@ -171,8 +171,6 @@ class GhostTrap
     instruction("Deposit ghosts in canister to fit more", 754, 113)
     instruction("in your pack.", 1024, 83)
 
-
-
   end
 
   def instruction(text, x, y)

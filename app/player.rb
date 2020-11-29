@@ -79,6 +79,9 @@ class Player < Entity
   def calc(outputs, tick_count)
     self.sprite_frame = self.is_walking ? tick_count.idiv(6).mod(2) : 0
 
+
+    # stop_sound(:shoot) if !self.is_shooting
+
     if self.can_shoot? && self.is_shooting
 
       self.shoot(outputs, tick_count)
@@ -123,6 +126,8 @@ class Player < Entity
   end
 
   def shoot(outputs, tick_count)
+    # play_sound(:shoot)
+
     # center beam on player (stance 1)
     self.beam.x = self.flip ? self.x + 40 : self.x + 44
 

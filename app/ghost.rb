@@ -81,6 +81,7 @@ class Ghost < Entity
   end
 
   def stop_flickering
+    # play_sound(:flicker_in)
     self.is_flickering = false
     self.is_invulnerable = false
     self.alpha = 255
@@ -91,6 +92,7 @@ class Ghost < Entity
   end
 
   def start_flickering
+    # play_sound(:flicker_out)
     if self.has_free_will
       self.is_flickering = true
       self.is_invulnerable = true
@@ -102,8 +104,7 @@ class Ghost < Entity
   end
 
   def self.spawn
-    # TODO randomly and flicker in
-    x = random_int(20, $WIDTH - 100) # TODO subtract ghost width
+    x = random_int(20, $WIDTH - 100)
     y = random_int(400, $HEIGHT - 100)
 
     Ghost.new(x, y)

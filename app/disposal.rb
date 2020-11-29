@@ -27,7 +27,6 @@ class Disposal < Entity
 
   def calc(tick_count)
     self.timer -=1 if self.is_open
-    puts "open" if self.is_open
     self.is_open = false if timer <= 0 && tick_count % 10 == 0
   end
 

@@ -1,5 +1,5 @@
 class Player < Entity
-  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown, :speed, :is_walking, :sprite_frame
+  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown, :speed, :is_walking, :sprite_frame, :shoot_sound_playing
   MAX_BEAM_POWER = 200
   BEAM_COOLDOWN = 1
 
@@ -18,7 +18,7 @@ class Player < Entity
     @speed = 6
     @is_walking = false
     @sprite_frame = 0
-
+    @shoot_sound_playing = false
   end
 
   def set_sprite
@@ -83,11 +83,12 @@ class Player < Entity
     # stop_sound(:shoot) if !self.is_shooting
 
     if self.can_shoot? && self.is_shooting
-
+      play_sound(:shoot) if !shoot_sound_playing
+      self.shoot_sound_playing = true if !self.shoot_sound_playing
       self.shoot(outputs, tick_count)
 
     elsif self.has_ghosts_on_beam?
-
+      self.shoot_sound_playing = false
       add_score(self.total_ghosts_on_beam)
 
       self.store_ghosts_from_beam_to_pack
@@ -126,8 +127,6 @@ class Player < Entity
   end
 
   def shoot(outputs, tick_count)
-    # play_sound(:shoot)
-
     # center beam on player (stance 1)
     self.beam.x = self.flip ? self.x + 40 : self.x + 44
 

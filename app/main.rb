@@ -51,7 +51,7 @@ def play_sound(type)
   when :dispose
     sound += "collect-burst.wav"
   when :shoot
-    sound += "science_fiction_electricity_beam_2.ogg"
+    sound += "Laser_08.wav"
   when :flicker_in
     sound += "spooky-high.wav"
   when :flicker_out

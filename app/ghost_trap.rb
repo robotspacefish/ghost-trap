@@ -273,7 +273,7 @@ class GhostTrap
     outputs.sprites << [grid.w.half - w/2, grid.h.half + h, w, h, "sprites/gameover.png"]
 
     outputs.labels << center_text(
-      "You disposed of #{state.disposal.total_ghosts} ghosts", 20
+      "You caught #{state.disposal.total_ghosts} ghosts", 20
     )
 
     outputs.labels << center_text("Score:  #{state.score}", -20)

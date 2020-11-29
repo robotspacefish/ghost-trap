@@ -35,7 +35,7 @@ class GhostTrap
   def calc_play
     if state.tick_count % 60 == 0
 
-      play_sound(:alarm) if state.timer.between?(1, 6)
+      play_sound(:alarm) if state.timer.between?(2, 6)
 
       freeze? ? state.countdown -=1 : state.timer -= 1
     end

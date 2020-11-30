@@ -1,6 +1,5 @@
 class Entity
   attr_accessor :x, :y, :w, :h, :sprite_path, :flip, :alpha
-  # @@all = []
 
   def initialize(x, y, w, h, sprite_path, flip)
     @w = w
@@ -37,10 +36,6 @@ class Entity
     self.rect.intersect_rect?(obj.rect)
   end
 
-  # override :serialize and return hash to Class can be persisted to disk in the event of an exception
-  # def serialize
-  #   { sprite_path: sprite_path, flip: flip }
-  # end
   def serialize
     {x: x, y: y, w: w, h: h}
   end

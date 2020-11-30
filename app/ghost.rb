@@ -1,22 +1,18 @@
-require 'app/entity.rb'
-
 class Ghost < Entity
-  attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam, :id, :has_been_in_beam # <- debug
+  attr_accessor :is_flickering, :is_invulnerable, :has_free_will, :is_in_beam, :id
 
   @@FLICKER_THRESHOLD = 255/2
 
   @@all = []
 
   def initialize(x, y)
-    # puts "initiating ghost at #{x}, #{y}"
     super(x, y, 80, 206, "sprites/ghost80.png", false)
-    @is_flickering = false
-    @is_invulnerable = false
+    @is_flickering = true
+    @is_invulnerable = true
+    @alpha = 255 * 0.4
     @has_free_will = true
     @is_in_beam = false
     @id = set_id
-
-    @has_been_in_beam = false # for debug
   end
 
   def self.all
@@ -32,9 +28,9 @@ class Ghost < Entity
     self.x = 0 if self.x < 0
     self.x = $WIDTH - self.w if self.x + self.w > $WIDTH
 
-    self.toggle_flickering if tick_count % 60 == 0 && rand < 0.5
+    self.toggle_flickering if tick_count % 60 == 0
 
-    self.flicker(tick_count) if self.is_flickering
+    self.flicker if self.is_flickering
 
     self.move_freely(tick_count) if self.has_free_will
   end
@@ -61,8 +57,6 @@ class Ghost < Entity
   end
 
   def stick_to_beam(beam)
-    self.has_been_in_beam = true if !self.has_been_in_beam # debug
-
     # center ghost over beam
     diff = self.w - beam.w
     self.x = beam.x - diff/2
@@ -82,11 +76,12 @@ class Ghost < Entity
     self.y += rand >= 0.5 ? -10 : 10
   end
 
-  def flicker(tick_count)
+  def flicker
     self.alpha = 255 * 0.4
   end
 
   def stop_flickering
+    # play_sound(:flicker_in)
     self.is_flickering = false
     self.is_invulnerable = false
     self.alpha = 255
@@ -97,6 +92,7 @@ class Ghost < Entity
   end
 
   def start_flickering
+    # play_sound(:flicker_out)
     if self.has_free_will
       self.is_flickering = true
       self.is_invulnerable = true
@@ -108,15 +104,14 @@ class Ghost < Entity
   end
 
   def self.spawn
-    # TODO randomly and flicker in
-    x = random_int(20, $WIDTH - 100) # TODO subtract ghost width
+    x = random_int(20, $WIDTH - 100)
     y = random_int(400, $HEIGHT - 100)
 
     Ghost.new(x, y)
   end
 
   def serialize
-    { x: x, y: y, w: w, h: h, is_flickering: is_flickering,  has_free_will: has_free_will, is_in_beam: is_in_beam, id: id, has_been_in_beam: has_been_in_beam }
+    { x: x, y: y, w: w, h: h, is_flickering: is_flickering,  has_free_will: has_free_will, is_in_beam: is_in_beam, id: id}
   end
 end
 

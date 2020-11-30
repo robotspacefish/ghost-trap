@@ -1,7 +1,5 @@
-require 'app/entity.rb'
-
 class Player < Entity
-  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown, :speed, :is_walking, :sprite_frame
+  attr_accessor :total_ghosts_held, :backpack_limit, :beam, :is_shooting, :ghosts_on_beam, :beam_power, :beam_cooldown, :speed, :is_walking, :sprite_frame, :shoot_sound_playing
   MAX_BEAM_POWER = 200
   BEAM_COOLDOWN = 1
 
@@ -20,7 +18,7 @@ class Player < Entity
     @speed = 6
     @is_walking = false
     @sprite_frame = 0
-
+    @shoot_sound_playing = false
   end
 
   def set_sprite
@@ -36,22 +34,26 @@ class Player < Entity
     self.total_ghosts_on_beam > 0
   end
 
-  def store_ghosts_from_beam_to_pack(args)
-    self.ghosts_on_beam.each { |g| self.store_ghost_in_pack(g, args) }
+  def store_ghosts_from_beam_to_pack
+    self.ghosts_on_beam.each { |g| self.store_ghost_in_pack(g) }
   end
 
   def can_fit_all_beam_ghosts_in_pack?
     self.total_ghosts_held + self.ghosts_on_beam.size < self.backpack_limit
   end
 
+  def has_ghosts_in_pack?
+    self.total_ghosts_held > 0
+  end
+
   def add_ghost_to_beam(ghost)
     self.ghosts_on_beam << ghost
   end
 
-  def store_ghost_in_pack(g, args)
+  def store_ghost_in_pack(g)
     self.total_ghosts_held += 1
 
-    remove_ghost(args, g)
+    remove_ghost(g)
   end
 
   def space_in_pack?
@@ -74,18 +76,19 @@ class Player < Entity
      self.total_ghosts_held = 0
   end
 
-  def calc(args)
-    self.sprite_frame = self.is_walking ? args.state.tick_count.idiv(6).mod(2) : 0
+  def calc(outputs, tick_count)
+    self.sprite_frame = self.is_walking ? tick_count.idiv(6).mod(2) : 0
 
     if self.can_shoot? && self.is_shooting
-
-      self.shoot(args)
+      play_sound(:shoot) if !shoot_sound_playing
+      self.shoot_sound_playing = true if !self.shoot_sound_playing
+      self.shoot(outputs, tick_count)
 
     elsif self.has_ghosts_on_beam?
+      self.shoot_sound_playing = false
+      add_score(self.total_ghosts_on_beam)
 
-      add_score(args, self.total_ghosts_on_beam)
-
-      self.store_ghosts_from_beam_to_pack(args)
+      self.store_ghosts_from_beam_to_pack
 
       self.ghosts_on_beam.clear
 
@@ -120,7 +123,7 @@ class Player < Entity
     self.is_walking = false
   end
 
-  def shoot(args)
+  def shoot(outputs, tick_count)
     # center beam on player (stance 1)
     self.beam.x = self.flip ? self.x + 40 : self.x + 44
 
@@ -128,11 +131,8 @@ class Player < Entity
     self.beam_power -= 1
 
     beam_sprite = 'sprites/beam_electric.png'
-    if args.state.tick_count % 5== 0
-      # TODO beam sprite change
-    end
 
-    args.outputs.sprites << [ self.beam.x, self.beam.y, self.beam.w, self.beam.h, beam_sprite ]
+    outputs.sprites << [ self.beam.x, self.beam.y, self.beam.w, self.beam.h, beam_sprite ]
   end
 
   def can_shoot?
@@ -145,15 +145,7 @@ class Player < Entity
     super
   end
 
-  def render_ui(args)
-    self.render_beam_power(args)
-
-
-    # args.outputs.labels << [$WIDTH - 200, 40, "Ghosts in Pack: #{self.total_ghosts_held}", 255, 255, 255]
-    # args.outputs.labels << [$WIDTH - 200, 60, "Ghosts on Beam: #{self.ghosts_on_beam.size}", 255, 255, 255]
-  end
-
-  def render_beam_power(args)
+  def render_beam_power(outputs)
     length = 400
     height = 20
     x = $WIDTH/2 - length/2
@@ -162,9 +154,9 @@ class Player < Entity
     # beam length changes based on how much power is left in beam
     beam_length = 2 * self.beam_power
 
-    args.outputs.labels << [x, y + height + 20, "BEAM POWER", 0, 0, 0]
-    args.outputs.sprites << [x, y, beam_length, height, "sprites/beam_power.png"]
-    args.outputs.borders << [x, y, length, height, 0, 0, 255]
+    outputs.labels << [x, y + height + 20, "BEAM POWER", 0, 0, 0]
+    outputs.sprites << [x, y, beam_length, height, "sprites/beam_power.png"]
+    outputs.borders << [x, y, length, height, 0, 0, 255]
   end
 
   def serialize

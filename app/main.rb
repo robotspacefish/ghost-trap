@@ -52,10 +52,6 @@ def play_sound(type)
     sound += "collect-burst.wav"
   when :shoot
     sound += "Laser_08.wav"
-  when :flicker_in
-    sound += "spooky-high.wav"
-  when :flicker_out
-    sound += "spooky-low.wav"
   when :alarm
     sound += "VOLUME_alarm.wav"
   when :fail
